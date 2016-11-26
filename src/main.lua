@@ -1,10 +1,16 @@
 local Player = require 'player'
+local LogSpawner = require 'logspawner'
 local leonCat = nil
 
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
 
-local river = {x = 0, y = 50, width = screenWidth, height = 100}
+local river = {x = 0, y = 50, width = screenWidth, height = 250}
+local logSpawners = {
+    LogSpawner:new(80),
+    LogSpawner:new(160),
+    LogSpawner:new(240)
+}
 
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
@@ -25,8 +31,11 @@ function love.keypressed(key)
     end
 end
 
-function reset() 
+function reset()
     leonCat:init()
+    for i, logSpawner in ipairs(logSpawners) do
+        logSpawner:init()
+    end
 end
 
 function drawGameOver()
@@ -43,19 +52,31 @@ function drawGameOver()
 end
 
 function love.draw()
-    love.graphics.setColor(0, 255, 0)
+    love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
 
     love.graphics.setColor(255, 255, 255)
+    for i, logSpawner in ipairs(logSpawners) do
+        for i, log in ipairs(logSpawner.logs) do
+            log:drawLog()
+        end
+    end
 
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
     else
-        drawGameOver() 
+        drawGameOver()
     end
 end
 
-function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
+function checkIsWithin(x1, y1, w1, h1, x2, y2, w2, h2)
+    return x1 >= x2 and
+           y1 >= y2 and
+           x1 + w1 <= x2 + w2 and
+           y1 + h1 <=  y2 + h2
+end
+
+function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
     return x1 < x2 + w2 and
          x2 < x1 + w1 and
          y1 < y2 + h2 and
@@ -64,10 +85,23 @@ end
 
 function love.update(dt)
     leonCat:update(dt)
-    
-    local hasCollided = CheckCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, river.x, river.y, river.width, river.height)
-    
-    if hasCollided then
+    for i, logSpawner in ipairs(logSpawners) do
+        logSpawner:update(dt)
+    end
+
+    local isOnLog = false
+    -- todo: not this
+    for i, logSpawner in ipairs(logSpawners) do
+        for i, log in ipairs(logSpawner.logs) do
+            if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, log.x, log.y, log.width, log.height) then
+                isOnLog = true
+                break
+            end
+        end
+    end
+    local hasDrowned = not isOnLog and checkIsWithin(leonCat.x, leonCat.y, leonCat.width, leonCat.height, river.x, river.y, river.width, river.height)
+
+    if hasDrowned then
         leonCat.isAlive = false
     end
 end
