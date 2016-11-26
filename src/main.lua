@@ -1,10 +1,11 @@
 local Player = require 'player'
+local Log = require 'log'
 local leonCat = nil
 
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
 
-local river = {x = 0, y = 50, width = screenWidth, height = 100}
+local river = {x = 0, y = 50, width = screenWidth, height = 250}
 
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
@@ -13,6 +14,8 @@ local gameOverText = love.graphics.newText(gameOverFont, gameOverString)
 local restartFont = love.graphics.newFont(20)
 local restartString = "Press R to restart. Stop Killing my cat!!!!"
 local restartText = love.graphics.newText(restartFont, restartString)
+
+local log = Log:new(100, 33)
 
 function love.load()
     local image = love.graphics.newImage("cat.jpg")
@@ -25,7 +28,7 @@ function love.keypressed(key)
     end
 end
 
-function reset() 
+function reset()
     leonCat:init()
 end
 
@@ -43,10 +46,12 @@ function drawGameOver()
 end
 
 function love.draw()
-    love.graphics.setColor(0, 255, 0)
+    love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
 
     love.graphics.setColor(255, 255, 255)
+    log:drawLog()
+
 
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
