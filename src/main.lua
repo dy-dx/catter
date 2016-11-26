@@ -7,13 +7,12 @@ local screenHeight = love.graphics.getHeight()
 local river = {x = 0, y = 50, width = screenWidth, height = 100}
 
 local gameOverFont = love.graphics.newFont(120)
-local gameOverText = love.graphics.newText(gameOverFont, "Game Over")
+local gameOverString = "Game Over"
+local gameOverText = love.graphics.newText(gameOverFont, gameOverString)
 
 local restartFont = love.graphics.newFont(20)
 local restartString = "Press R to restart. Stop Killing my cat!!!!"
 local restartText = love.graphics.newText(restartFont, restartString)
-
-
 
 function love.load()
     local image = love.graphics.newImage("cat.jpg")
@@ -23,13 +22,13 @@ end
 function drawGameOver()
     love.graphics.draw(
         gameOverText,
-        screenWidth / 2 - gameOverFont:getWidth("Game Over") / 2,
-        screenHeight / 2 - gameOverFont:getHeight("Game Over") / 2
+        screenWidth / 2 - gameOverFont:getWidth(gameOverString) / 2,
+        screenHeight / 2 - gameOverFont:getHeight(gameOverString) / 2
     )
     love.graphics.draw(
         restartText,
         screenWidth / 2 - restartFont:getWidth(restartString) / 2 ,
-        screenHeight / 2 + gameOverFont:getHeight("Game Over") / 2 + gameOverFont:getHeight(restartString) / 2
+        screenHeight / 2 + gameOverFont:getHeight(gameOverString) / 2 + gameOverFont:getHeight(restartString) / 2
     )
 end
 
