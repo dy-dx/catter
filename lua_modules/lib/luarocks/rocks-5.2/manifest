@@ -1,0 +1,30 @@
+commands = {}
+dependencies = {
+   fun = {
+      ["scm-1"] = {
+         {
+            constraints = {},
+            name = "lua"
+         }
+      }
+   }
+}
+modules = {
+   fun = {
+      "fun/scm-1"
+   }
+}
+repository = {
+   fun = {
+      ["scm-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               fun = "fun.lua"
+            }
+         }
+      }
+   }
+}
