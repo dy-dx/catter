@@ -1,11 +1,12 @@
 local Log = {}
 
-function Log:new(width, height, x, y)
+function Log:new(x, y, width, height, speed)
     local newObj = {
         width = width,
         height = height,
         x = x or 0,
-        y = y or 75
+        y = y or 75,
+        speed = speed or 200
     }
     self.__index = self
     newObj = setmetatable(newObj, self)

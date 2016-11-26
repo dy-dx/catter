@@ -1,11 +1,16 @@
 local Player = require 'player'
-local Log = require 'log'
+local LogSpawner = require 'logspawner'
 local leonCat = nil
 
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
 
 local river = {x = 0, y = 50, width = screenWidth, height = 250}
+local logSpawners = {
+    LogSpawner:new(80),
+    LogSpawner:new(160),
+    LogSpawner:new(240)
+}
 
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
@@ -14,8 +19,6 @@ local gameOverText = love.graphics.newText(gameOverFont, gameOverString)
 local restartFont = love.graphics.newFont(20)
 local restartString = "Press R to restart. Stop Killing my cat!!!!"
 local restartText = love.graphics.newText(restartFont, restartString)
-
-local log = Log:new(100, 33)
 
 function love.load()
     local image = love.graphics.newImage("cat.jpg")
@@ -30,6 +33,9 @@ end
 
 function reset()
     leonCat:init()
+    for i, logSpawner in ipairs(logSpawners) do
+        logSpawner:init()
+    end
 end
 
 function drawGameOver()
@@ -50,13 +56,16 @@ function love.draw()
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
 
     love.graphics.setColor(255, 255, 255)
-    log:drawLog()
-
+    for i, logSpawner in ipairs(logSpawners) do
+        for i, log in ipairs(logSpawner.logs) do
+            log:drawLog()
+        end
+    end
 
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
     else
-        drawGameOver() 
+        drawGameOver()
     end
 end
 
@@ -69,9 +78,12 @@ end
 
 function love.update(dt)
     leonCat:update(dt)
-    
+    for i, logSpawner in ipairs(logSpawners) do
+        logSpawner:update(dt)
+    end
+
     local hasCollided = CheckCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, river.x, river.y, river.width, river.height)
-    
+
     if hasCollided then
         leonCat.isAlive = false
     end
