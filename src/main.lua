@@ -84,21 +84,24 @@ function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
 end
 
 function love.update(dt)
-    leonCat:update(dt)
-    for i, logSpawner in ipairs(logSpawners) do
-        logSpawner:update(dt)
-    end
-
     local isOnLog = false
+    local occupiedLog = nil
     -- todo: not this
     for i, logSpawner in ipairs(logSpawners) do
         for i, log in ipairs(logSpawner.logs) do
             if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, log.x, log.y, log.width, log.height) then
                 isOnLog = true
+                occupiedLog = log
                 break
             end
         end
     end
+
+    leonCat:update(dt, occupiedLog)
+    for i, logSpawner in ipairs(logSpawners) do
+        logSpawner:update(dt)
+    end
+
     local hasDrowned = not isOnLog and checkIsWithin(leonCat.x, leonCat.y, leonCat.width, leonCat.height, river.x, river.y, river.width, river.height)
 
     if hasDrowned then

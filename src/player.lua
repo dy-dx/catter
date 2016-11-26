@@ -30,8 +30,11 @@ function Player:makeSound()
     print ('I AM A CAT HERE ME ' .. self.sound)
 end
 
-function Player:update(dt)
+function Player:update(dt, occupiedLog)
     local distance = dt * SPEED
+    if occupiedLog ~= nil then
+        self.x = self.x + occupiedLog.speed * dt
+    end
     local dimensionWidth, dimensionHeight = love.graphics.getDimensions()
 
     if love.keyboard.isDown("up") then
