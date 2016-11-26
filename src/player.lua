@@ -1,7 +1,7 @@
 local Player = {}
 
 local SPEED = 200
-local INITIAL_POSITION = { x = 300, y = 200 }
+local INITIAL_POSITION = { x = 350, y = 520 }
 local SOUND = 'meow'
 
 function Player:new(image)
@@ -12,7 +12,8 @@ function Player:new(image)
         y = INITIAL_POSITION.y,
         image = image,
         width = imageWidth,
-        height = imageHeight
+        height = imageHeight,
+        isAlive = true
       }
     self.__index = self
     return setmetatable(newObj, self)
