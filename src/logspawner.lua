@@ -43,7 +43,7 @@ function LogSpawner:hasRoomForAnother()
     for i, log in ipairs(self.logs) do
         leftmostLogX = math.min(leftmostLogX, log.x)
     end
-    if leftmostLogX > 40 then
+    if leftmostLogX > 200 then
         return true
     else
         return false
