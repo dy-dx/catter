@@ -4,19 +4,26 @@ local SPEED = 200
 local INITIAL_POSITION = { x = 350, y = 520 }
 local SOUND = 'meow'
 
+
+
 function Player:new(image)
     local imageWidth, imageHeight = image:getDimensions()
     local newObj = {
         sound = SOUND,
-        x = INITIAL_POSITION.x,
-        y = INITIAL_POSITION.y,
         image = image,
         width = imageWidth,
-        height = imageHeight,
-        isAlive = true
-      }
+        height = imageHeight
+    }
     self.__index = self
-    return setmetatable(newObj, self)
+    newObj = setmetatable(newObj, self)
+    newObj:init()
+    return newObj
+end
+
+function Player:init()
+    self.x = INITIAL_POSITION.x
+    self.y = INITIAL_POSITION.y
+    self.isAlive = true
 end
 
 function Player:makeSound()

@@ -19,6 +19,16 @@ function love.load()
     leonCat = Player:new(image)
 end
 
+function love.keypressed(key)
+    if key == 'r' then
+        reset()
+    end
+end
+
+function reset() 
+    leonCat:init()
+end
+
 function drawGameOver()
     love.graphics.draw(
         gameOverText,
@@ -37,6 +47,7 @@ function love.draw()
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
 
     love.graphics.setColor(255, 255, 255)
+
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
     else
@@ -58,6 +69,5 @@ function love.update(dt)
     
     if hasCollided then
         leonCat.isAlive = false
-
     end
 end
