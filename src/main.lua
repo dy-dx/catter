@@ -39,18 +39,18 @@ end
 
 local logSpawners = {
     Spawner:new(ItemFactory(200, BLOCK_H, 400, logDisplay), row(2)),
-    Spawner:new(ItemFactory(350, BLOCK_H, 350, logDisplay), row(3), -1),
+    Spawner:new(ItemFactory(350, BLOCK_H, -350, logDisplay), row(3), -1),
     Spawner:new(ItemFactory(300, BLOCK_H, 275, logDisplay), row(4)),
-    Spawner:new(ItemFactory(350, BLOCK_H, 225, logDisplay), row(5), -1),
+    Spawner:new(ItemFactory(350, BLOCK_H, -225, logDisplay), row(5), -1),
     Spawner:new(ItemFactory(300, BLOCK_H, 325, logDisplay), row(6))
 }
 
 local carSpawners = {
-    Spawner:new(ItemFactory(200, BLOCK_H, 425, carDisplay), row(8), -1),
+    Spawner:new(ItemFactory(200, BLOCK_H, -425, carDisplay), row(8), -1),
     Spawner:new(ItemFactory(100, BLOCK_H, 500, carDisplay), row(9)),
-    Spawner:new(ItemFactory(150, BLOCK_H, 375, carDisplay), row(10), -1),
+    Spawner:new(ItemFactory(150, BLOCK_H, -375, carDisplay), row(10), -1),
     Spawner:new(ItemFactory(200, BLOCK_H, 250, carDisplay), row(11)),
-    Spawner:new(ItemFactory(100, BLOCK_H, 300, carDisplay), row(12), -1)
+    Spawner:new(ItemFactory(100, BLOCK_H, -300, carDisplay), row(12), -1)
 }
 
 function tableConcat(t1, t2)
@@ -125,13 +125,14 @@ function love.draw()
         end
     end
 
-    if leonCat.isAlive and not leonCat.isInSlot then
+    if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
-    elseif leonCat.isAlive and leonCat.isInSlot then
-        hubs:fillSlots()
-        leonCat:init()
     else
         drawGameOver()
+    end
+
+    if leonCat.isInSlot then
+        leonCat:init()
     end
 end
 

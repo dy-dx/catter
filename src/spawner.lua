@@ -18,7 +18,7 @@ end
 
 function Spawner:update(dt)
     for i, item in ipairs(self.items) do
-        item.x = item.x + item.speed * dt * self.xDirection
+        item.x = item.x + item.speed * dt
         if self.xDirection == 1 and item.x > love.graphics.getWidth() then
             table.remove(self.items, 1)
         end
