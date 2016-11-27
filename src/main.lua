@@ -1,7 +1,10 @@
 local Player = require 'player'
-local LogSpawner = require 'logspawner'
 local Hubs = require 'hubs'
+local Spawner = require 'spawner'
 local leonCat = nil
+
+local Log = require 'log'
+local Car = require 'car'
 
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
@@ -11,10 +14,30 @@ local river = {x = 0, y = 50, width = screenWidth, height = 250}
 local hubs = Hubs:new()
 
 local logSpawners = {
-    LogSpawner:new(80),
-    LogSpawner:new(160),
-    LogSpawner:new(240)
+    Spawner:new(Log, 80),
+    Spawner:new(Log, 160, -1),
+    Spawner:new(Log, 240)
 }
+
+local carSpawners = {
+    Spawner:new(Car, 360, -1),
+    Spawner:new(Car, 440),
+    Spawner:new(Car, 520, -1)
+}
+
+function tableConcat(t1, t2)
+    both = {}
+    for i=1,#t1 do
+        both[#both+1] = t1[i]
+    end
+
+    for i=1,#t2 do
+        both[#both+1] = t2[i]
+    end
+    return both
+end
+
+local allSpawners = tableConcat(logSpawners, carSpawners)
 
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
@@ -37,8 +60,8 @@ end
 
 function reset()
     leonCat:init()
-    for i, logSpawner in ipairs(logSpawners) do
-        logSpawner:init()
+    for i, spawner in ipairs(allSpawners) do
+        spawner:init()
     end
 end
 
@@ -60,9 +83,10 @@ function love.draw()
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
     hubs:drawHubs()
     love.graphics.setColor(255, 255, 255)
-    for i, logSpawner in ipairs(logSpawners) do
-        for i, log in ipairs(logSpawner.logs) do
-            log:drawLog()
+
+    for i, spawner in ipairs(allSpawners) do
+        for i, item in ipairs(spawner.items) do
+            item:draw()
         end
     end
 
@@ -90,20 +114,37 @@ end
 function love.update(dt)
     local isOnLog = false
     local occupiedLog = nil
+
+    -- The order of these statements matters!
+
+    leonCat:handleInput(dt)
+
     -- todo: not this
     for i, logSpawner in ipairs(logSpawners) do
-        for i, log in ipairs(logSpawner.logs) do
+        for i, log in ipairs(logSpawner.items) do
             if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, log.x, log.y, log.width, log.height) then
                 isOnLog = true
                 occupiedLog = log
                 break
             end
         end
+        if isOnLog then
+            break
+        end
+    end
+
+    for i, carSpawner in ipairs(carSpawners) do
+        for i, car in ipairs(carSpawner.items) do
+            if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, car.x, car.y, car.width, car.height) then
+                leonCat.isAlive = false
+                break
+            end
+        end
     end
 
     leonCat:update(dt, occupiedLog)
-    for i, logSpawner in ipairs(logSpawners) do
-        logSpawner:update(dt)
+    for i, spawner in ipairs(allSpawners) do
+        spawner:update(dt)
     end
 
     local hasDrowned = not isOnLog and checkIsWithin(leonCat.x, leonCat.y, leonCat.width, leonCat.height, river.x, river.y, river.width, river.height)
