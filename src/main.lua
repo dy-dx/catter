@@ -14,7 +14,7 @@ local Car = require 'car'
 
 -- environment
 local river = {x = 0, y = BLOCK_H, width = screenWidth, height = BLOCK_H * 5}
-local hubs = Hubs:new()
+local hubs = Hubs:new(0, 0, screenWidth, BLOCK_H)
 
 local logSpawners = {
     Spawner:new(Log, 70),
