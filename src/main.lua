@@ -9,23 +9,40 @@ local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local leonCat = nil
 
-local Log = require 'log'
-local Car = require 'car'
+local Item = require 'item'
 
 -- environment
 local river = {x = 0, y = BLOCK_H, width = screenWidth, height = BLOCK_H * 5}
 local hubs = Hubs:new()
 
+function logDisplay(x, y, width, height) 
+    love.graphics.setColor(139, 69, 19)
+    love.graphics.rectangle('fill', x, y, width, height)
+    love.graphics.setColor(255, 255, 255)
+end
+
+function carDisplay(x, y, width, height) 
+    love.graphics.setColor(0, 255, 0)
+    love.graphics.rectangle('fill', x, y, width, height)
+    love.graphics.setColor(255, 255, 255)
+end
+
+function ItemFactory(width, height, displayFn)
+    return function(x, y, speed)
+        return Item:new(x, y, width, height, speed, displayFn)
+    end
+end
+
 local logSpawners = {
-    Spawner:new(Log, 70),
-    Spawner:new(Log, 150, -1),
-    Spawner:new(Log, 230)
+    Spawner:new(ItemFactory(350, 60, logDisplay), 70),
+    Spawner:new(ItemFactory(350, 60, logDisplay), 150, -1),
+    Spawner:new(ItemFactory(350, 60, logDisplay), 230)
 }
 
 local carSpawners = {
-    -- Spawner:new(Car, 350, -1),
-    -- Spawner:new(Car, 430),
-    -- Spawner:new(Car, 510, -1)
+    Spawner:new(ItemFactory(100, 60, carDisplay), 350, -1),
+    Spawner:new(ItemFactory(100, 60, carDisplay), 430),
+    Spawner:new(ItemFactory(100, 60, carDisplay), 510, -1)
 }
 
 function tableConcat(t1, t2)
