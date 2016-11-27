@@ -29,11 +29,11 @@ function Spawner:update(dt)
     end
 
     if self.xDirection == 1 and self:hasRoomForAnotherLeft() then
-        table.insert(self.items, self.factory(-350, self.yPos, 200))
+        table.insert(self.items, self.factory(-350, self.yPos))
     end
 
     if self.xDirection == -1 and self:hasRoomForAnotherRight() then
-        table.insert(self.items, self.factory(love.graphics.getWidth() + 350, self.yPos, 200))
+        table.insert(self.items, self.factory(love.graphics.getWidth() + 350, self.yPos))
     end
 end
 

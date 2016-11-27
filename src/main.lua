@@ -26,22 +26,22 @@ function carDisplay(x, y, width, height)
     love.graphics.setColor(255, 255, 255)
 end
 
-function ItemFactory(width, height, displayFn)
-    return function(x, y, speed)
+function ItemFactory(width, height, speed, displayFn)
+    return function(x, y)
         return Item:new(x, y, width, height, speed, displayFn)
     end
 end
 
 local logSpawners = {
-    Spawner:new(ItemFactory(350, 60, logDisplay), 70),
-    Spawner:new(ItemFactory(350, 60, logDisplay), 150, -1),
-    Spawner:new(ItemFactory(350, 60, logDisplay), 230)
+    Spawner:new(ItemFactory(200, BLOCK_H, 400, logDisplay), 70),
+    Spawner:new(ItemFactory(350, BLOCK_H, 225, logDisplay), 150, -1),
+    Spawner:new(ItemFactory(300, BLOCK_H, 275, logDisplay), 230)
 }
 
 local carSpawners = {
-    Spawner:new(ItemFactory(100, 60, carDisplay), 350, -1),
-    Spawner:new(ItemFactory(100, 60, carDisplay), 430),
-    Spawner:new(ItemFactory(100, 60, carDisplay), 510, -1)
+    Spawner:new(ItemFactory(200, BLOCK_H, 425, carDisplay), 350, -1),
+    Spawner:new(ItemFactory(100, BLOCK_H, 500, carDisplay), 430),
+    Spawner:new(ItemFactory(100, BLOCK_H, 300, carDisplay), 510, -1)
 }
 
 function tableConcat(t1, t2)
