@@ -8,7 +8,7 @@ local BLOCK_H = 50
 
 local screenWidth = 14 * BLOCK_W
 local screenHeight = 14 * BLOCK_H
-local PADDING = 2
+local PADDING = 4
 local leonCat = nil
 
 function row(num)
