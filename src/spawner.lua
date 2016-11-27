@@ -1,9 +1,9 @@
 local Spawner = Class:new()
 
 function Spawner:init(factory, yPos, xDirection)
-    yPos = yPos or 100
-    xDirection = xDirection or 1
-    factory = factory
+    self.yPos = yPos or 100
+    self.xDirection = xDirection or 1
+    self.factory = factory
     self:reset()
 end
 
