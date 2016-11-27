@@ -17,16 +17,16 @@ local logSpawners = {
 }
 
 local carSpawners = {
-    Spawner:new(Log, 360),
-    Spawner:new(Log, 440),
-    Spawner:new(Log, 520)
+    Spawner:new(Car, 360),
+    Spawner:new(Car, 440),
+    Spawner:new(Car, 520)
 }
 
 function tableConcat(t1, t2)
-    both = {} 
+    both = {}
     for i=1,#t1 do
         both[#both+1] = t1[i]
-    end 
+    end
 
     for i=1,#t2 do
         both[#both+1] = t2[i]
