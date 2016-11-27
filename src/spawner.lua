@@ -1,10 +1,10 @@
 local Spawner = {}
 
-function Spawner:new(type, yPos, xDirection)
+function Spawner:new(factory, yPos, xDirection)
     local newObj = {
         yPos = yPos or 100,
         xDirection = xDirection or 1,
-        type = type
+        factory = factory
     }
     self.__index = self
     newObj = setmetatable(newObj, self)
@@ -29,13 +29,11 @@ function Spawner:update(dt)
     end
 
     if self.xDirection == 1 and self:hasRoomForAnotherLeft() then
-        -- Todo: spawn from the right if direction is negative
-        table.insert(self.items, self.type:new(-350, self.yPos, 350, 60))
+        table.insert(self.items, self.factory(-350, self.yPos))
     end
 
     if self.xDirection == -1 and self:hasRoomForAnotherRight() then
-        -- Todo: spawn from the right if direction is negative
-        table.insert(self.items, self.type:new(love.graphics.getWidth() + 350, self.yPos, 350, 60))
+        table.insert(self.items, self.factory(love.graphics.getWidth() + 350, self.yPos))
     end
 end
 

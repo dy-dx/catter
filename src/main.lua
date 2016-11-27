@@ -1,28 +1,56 @@
+BLOCK_W = 64
+BLOCK_H = 50
+
+local screenWidth = 14 * BLOCK_W
+local screenHeight = 14 * BLOCK_H
+
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local leonCat = nil
 
-local Log = require 'log'
-local Car = require 'car'
+local Item = require 'item'
 
-local screenWidth = love.graphics.getWidth()
-local screenHeight = love.graphics.getHeight()
+function row(num)
+    return BLOCK_H * (num - 1)
+end
 
 -- environment
-local river = {x = 0, y = 50, width = screenWidth, height = 250}
-local hubs = Hubs:new()
+local river = {x = 0, y = BLOCK_H, width = screenWidth, height = BLOCK_H * 5}
+local hubs = Hubs:new(0, 0, screenWidth, BLOCK_H)
+
+function logDisplay(x, y, width, height)
+    love.graphics.setColor(139, 69, 19)
+    love.graphics.rectangle('fill', x, y, width, height)
+    love.graphics.setColor(255, 255, 255)
+end
+
+function carDisplay(x, y, width, height)
+    love.graphics.setColor(0, 255, 0)
+    love.graphics.rectangle('fill', x, y, width, height)
+    love.graphics.setColor(255, 255, 255)
+end
+
+function ItemFactory(width, height, speed, displayFn)
+    return function(x, y)
+        return Item:new(x, y, width, height, speed, displayFn)
+    end
+end
 
 local logSpawners = {
-    Spawner:new(Log, 70),
-    Spawner:new(Log, 150, -1),
-    Spawner:new(Log, 230)
+    Spawner:new(ItemFactory(200, BLOCK_H, 400, logDisplay), row(2)),
+    Spawner:new(ItemFactory(350, BLOCK_H, 350, logDisplay), row(3), -1),
+    Spawner:new(ItemFactory(300, BLOCK_H, 275, logDisplay), row(4)),
+    Spawner:new(ItemFactory(350, BLOCK_H, 225, logDisplay), row(5), -1),
+    Spawner:new(ItemFactory(300, BLOCK_H, 325, logDisplay), row(6))
 }
 
 local carSpawners = {
-    -- Spawner:new(Car, 350, -1),
-    -- Spawner:new(Car, 430),
-    -- Spawner:new(Car, 510, -1)
+    Spawner:new(ItemFactory(200, BLOCK_H, 425, carDisplay), row(8), -1),
+    Spawner:new(ItemFactory(100, BLOCK_H, 500, carDisplay), row(9)),
+    Spawner:new(ItemFactory(150, BLOCK_H, 375, carDisplay), row(10), -1),
+    Spawner:new(ItemFactory(200, BLOCK_H, 250, carDisplay), row(11)),
+    Spawner:new(ItemFactory(100, BLOCK_H, 300, carDisplay), row(12), -1)
 }
 
 function tableConcat(t1, t2)
@@ -82,6 +110,13 @@ function love.draw()
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
     hubs:drawHubs()
+    -- safe areas
+    love.graphics.setColor(148, 0, 211)
+    love.graphics.rectangle('fill', 0, BLOCK_H * 6, screenWidth, BLOCK_H)
+    love.graphics.rectangle('fill', 0, BLOCK_H * 12, screenWidth, BLOCK_H)
+    -- highway
+    love.graphics.setColor(100, 100, 100)
+    love.graphics.rectangle('fill', 0, BLOCK_H * 7, screenWidth, BLOCK_H * 5)
     love.graphics.setColor(255, 255, 255)
 
     for i, spawner in ipairs(allSpawners) do

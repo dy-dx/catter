@@ -1,7 +1,11 @@
 local Player = {}
 
-local MOVE_DISTANCE = 64
-local INITIAL_POSITION = { x = 350, y = 520 }
+local BLOCK_SIZE = 64
+local BLOCK_W = 64
+local BLOCK_H = 50
+local yBlockOffset = (BLOCK_H - 44) / 2
+local MAX_Y = BLOCK_H * 12 + yBlockOffset
+local INITIAL_POSITION = { x = BLOCK_W * 7, y = MAX_Y }
 local SOUND = 'meow'
 
 function Player:new(image)
@@ -10,9 +14,7 @@ function Player:new(image)
         sound = SOUND,
         image = image,
         width = imageWidth,
-        height = imageHeight,
-        moveTimeout = 0.25,
-        timeSinceMoved = math.huge
+        height = imageHeight
     }
     self.__index = self
     newObj = setmetatable(newObj, self)
@@ -25,6 +27,8 @@ function Player:init()
     self.y = INITIAL_POSITION.y
     self.isAlive = true
     self.isInSlot = false
+    self.timeSinceMoved = math.huge
+    self.moveTimeout = 0.25
 end
 
 function Player:makeSound()
@@ -37,19 +41,16 @@ function Player:handleInput(dt)
 
     if self.timeSinceMoved >= self.moveTimeout then
         if love.keyboard.isDown("up") then
-            self.y = self.y - MOVE_DISTANCE
+            self.y = self.y - BLOCK_H
             self.timeSinceMoved = 0
-        end
-        if love.keyboard.isDown("down") then
-            self.y = self.y + MOVE_DISTANCE
+        elseif love.keyboard.isDown("down") then
+            self.y = self.y + BLOCK_H
             self.timeSinceMoved = 0
-        end
-        if love.keyboard.isDown("left") then
-            self.x = self.x - MOVE_DISTANCE
+        elseif love.keyboard.isDown("left") then
+            self.x = self.x - BLOCK_W
             self.timeSinceMoved = 0
-        end
-        if love.keyboard.isDown("right") then
-            self.x = self.x + MOVE_DISTANCE
+        elseif love.keyboard.isDown("right") then
+            self.x = self.x + BLOCK_W
             self.timeSinceMoved = 0
         end
     end
@@ -65,7 +66,7 @@ function Player:update(dt, occupiedLog)
     self.x = math.max(0, self.x)
     self.x = math.min(dimensionWidth - self.width, self.x)
     self.y = math.max(0, self.y)
-    self.y = math.min(dimensionHeight - self.height, self.y)
+    self.y = math.min(MAX_Y, self.y)
 end
 
 return Player
