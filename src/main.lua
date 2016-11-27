@@ -1,5 +1,8 @@
 require 'class'
 lume = require '../vendor/lume'
+Timer = require '../vendor/hump.timer'
+Signal = require '../vendor/hump.signal'
+
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
@@ -215,6 +218,7 @@ function love.update(dt)
     local occupiedLog = nil
     -- The order of these statements matters!
 
+    Timer.update(dt)
     leonCat:handleInput(dt)
 
     if checkCollision(leonCat, hubs) then

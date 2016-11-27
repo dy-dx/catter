@@ -14,6 +14,7 @@ function Player:init(image)
     self.width = imageWidth
     self.height = imageHeight
     self.SOUND = SOUND
+    self.moveTimer = Timer.new()
     self:reset()
 end
 
@@ -22,33 +23,47 @@ function Player:reset()
     self.y = INITIAL_POSITION.y
     self.isAlive = true -- sould not be changed externally
     self.isInSlot = false
-    self.timeSinceMoved = 0
-    self.moveTimeout = 0.15
     self.isGod = false
+    self._canMove = true
+    self.moveTimer:clear()
+end
+
+function Player:canMove()
+    return self._canMove
+end
+
+function Player:setMoveTimer()
+    self.moveTimer:clear()
+    self._canMove = false
+    self.moveTimer:after(0.15, function() self._canMove = true end)
 end
 
 function Player:makeSound()
     print ('I AM A CAT HERE ME ' .. self.sound)
 end
 
+function Player:move(xDir, yDir)
+    if not self:canMove() then
+        return false
+    end
+
+    self:setMoveTimer()
+    self.x = self.x + xDir*BLOCK_W
+    self.y = self.y + yDir*BLOCK_H
+end
+
 -- shhh is ok
 function Player:handleInput(dt)
-    self.timeSinceMoved = self.timeSinceMoved + dt
+    self.moveTimer:update(dt)
 
-    if self.timeSinceMoved >= self.moveTimeout then
-        if love.keyboard.isDown("up") then
-            self.y = self.y - BLOCK_H
-            self.timeSinceMoved = 0
-        elseif love.keyboard.isDown("down") then
-            self.y = self.y + BLOCK_H
-            self.timeSinceMoved = 0
-        elseif love.keyboard.isDown("left") then
-            self.x = self.x - BLOCK_W
-            self.timeSinceMoved = 0
-        elseif love.keyboard.isDown("right") then
-            self.x = self.x + BLOCK_W
-            self.timeSinceMoved = 0
-        end
+    if love.keyboard.isDown("up") then
+        self:move(0, -1)
+    elseif love.keyboard.isDown("down") then
+        self:move(0, 1)
+    elseif love.keyboard.isDown("left") then
+        self:move(-1, 0)
+    elseif love.keyboard.isDown("right") then
+        self:move(1, 0)
     end
 end
 
