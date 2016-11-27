@@ -1,16 +1,11 @@
-local Slot = {}
+local Slot = Class:new()
 
-function Slot:new(x, y, width, height)
-    local newObj = {
-      x = x,
-      y = y,
-      width = width,
-      height = height,
-      isFilled = false
-    }
-    self.__index = self
-    newObj = setmetatable(newObj, self)
-    return newObj
+function Slot:init(x, y, width, height)
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
+    self.isFilled = false
 end
 
 function Slot:drawSlot()

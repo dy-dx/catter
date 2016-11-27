@@ -1,16 +1,11 @@
-local Hud = {}
-
-function Hud:new()
-    local newObj = {
-    }
-    self.__index = self
-    newObj = setmetatable(newObj, self)
-    newObj:init()
-    return newObj
-end
+local Hud = Class:new()
 
 function Hud:init()
     self.livesFont = love.graphics.newFont(22)
+    self:reset()
+end
+
+function Hud:reset()
 end
 
 function Hud:updateLives(lives)
