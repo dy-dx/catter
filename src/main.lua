@@ -97,9 +97,18 @@ function love.load()
     init()
 end
 
+function toggleGodMode()
+    leonCat.isGod = not leonCat.isGod
+    Hud:toggleGodMode()
+end
+
 function love.keypressed(key)
     if key == 'r' then
         reset()
+    end
+
+    if key == 'g' then
+        toggleGodMode()
     end
 end
 
@@ -217,12 +226,13 @@ function love.update(dt)
     leonCat:handleInput(dt)
 
     if checkCollision(leonCat, hubs) then
-        leonCat.isAlive = false
+        leonCat:kill()
     end
+
     for i, slot in ipairs(hubs.slots) do
         if checkInSlot(leonCat, slot) then
             if slot.isFilled then
-                leonCat.isAlive = false
+                leonCat:kill()
                 break
             end
             leonCat.isInSlot = true
@@ -248,7 +258,7 @@ function love.update(dt)
     for i, carSpawner in ipairs(carSpawners) do
         for i, car in ipairs(carSpawner.items) do
             if checkCollision(leonCat, car) then
-                leonCat.isAlive = false
+                leonCat:kill()
                 break
             end
         end
@@ -262,7 +272,7 @@ function love.update(dt)
     local hasDrowned = not isOnLog and checkIsWithin(leonCat, river)
 
     if hasDrowned then
-        leonCat.isAlive = false
+        leonCat:kill()
     end
 
     if leonCat.isInSlot then

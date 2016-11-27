@@ -25,10 +25,11 @@ end
 function Player:init()
     self.x = INITIAL_POSITION.x
     self.y = INITIAL_POSITION.y
-    self.isAlive = true
+    self.isAlive = true -- sould not be changed externally
     self.isInSlot = false
     self.timeSinceMoved = 0
     self.moveTimeout = 0.15
+    self.isGod = false
 end
 
 function Player:makeSound()
@@ -53,6 +54,12 @@ function Player:handleInput(dt)
             self.x = self.x + BLOCK_W
             self.timeSinceMoved = 0
         end
+    end
+end
+
+function Player:kill()
+    if not self.isGod then
+        self.isAlive = false
     end
 end
 
