@@ -1,6 +1,6 @@
-local Log = {}
+local Car = {}
 
-function Log:new(x, y, width, height, speed)
+function Car:new(x, y, width, height, speed)
     local newObj = {
         width = width,
         height = height,
@@ -13,10 +13,10 @@ function Log:new(x, y, width, height, speed)
     return newObj
 end
 
-function Log:draw()
-    love.graphics.setColor(139, 69, 19)
+function Car:draw()
+    love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
     love.graphics.setColor(255, 255, 255)
 end
 
-return Log
+return Car

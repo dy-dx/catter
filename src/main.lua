@@ -3,16 +3,38 @@ local Spawner = require 'spawner'
 local leonCat = nil
 
 local Log = require 'log'
+local Car = require 'car'
 
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
 
 local river = {x = 0, y = 50, width = screenWidth, height = 250}
-local spawners = {
+
+local logSpawners = {
     Spawner:new(Log, 80),
     Spawner:new(Log, 160),
     Spawner:new(Log, 240)
 }
+
+local carSpawners = {
+    Spawner:new(Log, 360),
+    Spawner:new(Log, 440),
+    Spawner:new(Log, 520)
+}
+
+function tableConcat(t1, t2)
+    both = {} 
+    for i=1,#t1 do
+        both[#both+1] = t1[i]
+    end 
+
+    for i=1,#t2 do
+        both[#both+1] = t2[i]
+    end
+    return both
+end
+
+local allSpawners = tableConcat(logSpawners, carSpawners)
 
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
@@ -35,8 +57,8 @@ end
 
 function reset()
     leonCat:init()
-    for i, logSpawner in ipairs(spawners) do
-        Spawner:init()
+    for i, spawner in ipairs(allSpawners) do
+        spawner:init()
     end
 end
 
@@ -56,11 +78,11 @@ end
 function love.draw()
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
-
     love.graphics.setColor(255, 255, 255)
-    for i, spawner in ipairs(spawners) do
-        for i, log in ipairs(spawner.items) do
-            log:drawLog()
+
+    for i, spawner in ipairs(allSpawners) do
+        for i, item in ipairs(spawner.items) do
+            item:draw()
         end
     end
 
@@ -89,8 +111,8 @@ function love.update(dt)
     local isOnLog = false
     local occupiedLog = nil
     -- todo: not this
-    for i, spawner in ipairs(spawners) do
-        for i, log in ipairs(spawner.items) do
+    for i, logSpawner in ipairs(logSpawners) do
+        for i, log in ipairs(logSpawner.items) do
             if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, log.x, log.y, log.width, log.height) then
                 isOnLog = true
                 occupiedLog = log
@@ -99,8 +121,17 @@ function love.update(dt)
         end
     end
 
+    for i, carSpawner in ipairs(carSpawners) do
+        for i, car in ipairs(carSpawner.items) do
+            if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, car.x, car.y, car.width, car.height) then
+                leonCat.isAlive = false
+                break
+            end
+        end
+    end
+
     leonCat:update(dt, occupiedLog)
-    for i, spawner in ipairs(spawners) do
+    for i, spawner in ipairs(allSpawners) do
         spawner:update(dt)
     end
 
