@@ -1,4 +1,5 @@
 require 'class'
+lume = require '../vendor/lume'
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'

@@ -63,12 +63,8 @@ function Player:update(dt, occupiedLog)
         self.x = self.x + occupiedLog.speed * dt
     end
 
-    local dimensionWidth, dimensionHeight = love.graphics.getDimensions()
-
-    self.x = math.max(0, self.x)
-    self.x = math.min(dimensionWidth - self.width, self.x)
-    self.y = math.max(0, self.y)
-    self.y = math.min(MAX_Y, self.y)
+    self.x = lume.clamp(self.x, 0, love.graphics.getWidth() - self.width)
+    self.y = lume.clamp(self.y, 0, MAX_Y)
 end
 
 return Player
