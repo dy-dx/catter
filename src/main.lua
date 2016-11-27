@@ -1,3 +1,4 @@
+require 'class'
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
@@ -122,10 +123,10 @@ end
 
 function reset()
     init()
-    leonCat:init()
-    hubs:init()
+    leonCat:reset()
+    hubs:reset()
     for i, spawner in ipairs(allSpawners) do
-        spawner:init()
+        spawner:reset()
     end
 end
 
@@ -208,16 +209,6 @@ function checkCollision(item1, item2)
          y2 < y1 + h1
 end
 
-function checkInSlot(item1, item2)
-    local x1, y1, w1, h1 = xYWidthHeight(item1)
-    local x2, y2, w2, h2 = xYWidthHeight(item2)
-
-    return x1 >= x2 and
-           y1 >= y2 and
-           x1 + w1 <= x2 + w2 and
-           y1 + h1 <= y2 + h2
-end
-
 function love.update(dt)
     local isOnLog = false
     local occupiedLog = nil
@@ -230,7 +221,7 @@ function love.update(dt)
     end
 
     for i, slot in ipairs(hubs.slots) do
-        if checkInSlot(leonCat, slot) then
+        if checkIsWithin(leonCat, slot) then
             if slot.isFilled then
                 leonCat:kill()
                 break

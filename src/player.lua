@@ -1,4 +1,4 @@
-local Player = {}
+local Player = Class:new()
 
 local BLOCK_SIZE = 64
 local BLOCK_W = 64
@@ -8,21 +8,16 @@ local MAX_Y = BLOCK_H * 12 + yBlockOffset
 local INITIAL_POSITION = { x = BLOCK_W * 7, y = MAX_Y }
 local SOUND = 'meow'
 
-function Player:new(image)
+function Player:init(image)
     local imageWidth, imageHeight = image:getDimensions()
-    local newObj = {
-        sound = SOUND,
-        image = image,
-        width = imageWidth,
-        height = imageHeight
-    }
-    self.__index = self
-    newObj = setmetatable(newObj, self)
-    newObj:init()
-    return newObj
+    self.image = image
+    self.width = imageWidth
+    self.height = imageHeight
+    self.SOUND = SOUND
+    self:reset()
 end
 
-function Player:init()
+function Player:reset()
     self.x = INITIAL_POSITION.x
     self.y = INITIAL_POSITION.y
     self.isAlive = true -- sould not be changed externally

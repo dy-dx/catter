@@ -1,13 +1,4 @@
-local Hud = {}
-
-function Hud:new()
-    local newObj = {
-    }
-    self.__index = self
-    newObj = setmetatable(newObj, self)
-    newObj:init()
-    return newObj
-end
+local Hud = Class:new()
 
 function Hud:init()
     self.livesFont = love.graphics.newFont(22)
@@ -15,6 +6,10 @@ function Hud:init()
     self.godString = 'GOD MODE'
     self.godText = love.graphics.newText(self.godFont, self.godString)
     self.isGodMode = false;
+    self:reset()
+end
+
+function Hud:reset()
 end
 
 function Hud:updateLives(lives)
