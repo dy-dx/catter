@@ -1,6 +1,6 @@
 local Player = {}
 
-local MOVE_DISTANCE = 100
+local MOVE_DISTANCE = 64
 local INITIAL_POSITION = { x = 350, y = 520 }
 local SOUND = 'meow'
 
@@ -11,7 +11,7 @@ function Player:new(image)
         image = image,
         width = imageWidth,
         height = imageHeight,
-        moveTimeout = 0.4,
+        moveTimeout = 0.25,
         timeSinceMoved = math.huge
     }
     self.__index = self

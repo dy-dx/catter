@@ -48,7 +48,7 @@ local restartString = "Press R to restart. Stop Killing my cat!!!!"
 local restartText = love.graphics.newText(restartFont, restartString)
 
 function love.load()
-    local image = love.graphics.newImage("cat.jpg")
+    local image = love.graphics.newImage("cat64x44.jpg")
     leonCat = Player:new(image)
 end
 
