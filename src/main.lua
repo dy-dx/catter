@@ -25,14 +25,14 @@ local hubs = Hubs:new(0, 0, screenWidth, BLOCK_H)
 
 function logDisplay(x, y, width, height)
     love.graphics.setColor(139, 69, 19)
-    love.graphics.rectangle('fill', x + PADDING, y, width, height - PADDING * 2)
+    love.graphics.rectangle('fill', x, y + PADDING, width, height - PADDING * 2)
     love.graphics.setColor(255, 255, 255)
 end
 
 function carDisplay(x, y, width, height)
     local padding = 2
     love.graphics.setColor(0, 255, 0)
-    love.graphics.rectangle('fill', x + PADDING, y, width, height - PADDING * 2)
+    love.graphics.rectangle('fill', x, y + PADDING, width, height - PADDING * 2)
     love.graphics.setColor(255, 255, 255)
 end
 
