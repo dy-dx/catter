@@ -23,19 +23,19 @@ function Spawner:update(dt)
             table.remove(self.items, 1)
         end
 
-        if self.xDirection == -1 and item.x < 0 then
+        if self.xDirection == -1 and item.x < -350 then
             table.remove(self.items, 1)
         end
     end
 
     if self.xDirection == 1 and self:hasRoomForAnotherLeft() then
         -- Todo: spawn from the right if direction is negative
-        table.insert(self.items, self.type:new(-100, self.yPos, 100, 33))
+        table.insert(self.items, self.type:new(-350, self.yPos, 350, 60))
     end
 
     if self.xDirection == -1 and self:hasRoomForAnotherRight() then
         -- Todo: spawn from the right if direction is negative
-        table.insert(self.items, self.type:new(love.graphics.getWidth() + 100, self.yPos, 100, 33))
+        table.insert(self.items, self.type:new(love.graphics.getWidth() + 350, self.yPos, 350, 60))
     end
 end
 
@@ -50,7 +50,7 @@ function Spawner:hasRoomForAnotherLeft()
         leftmostItemX = math.min(leftmostItemX, item.x)
     end
 
-    if leftmostItemX > 200 then
+    if leftmostItemX > 350 then
         return true
     else
         return false
@@ -68,7 +68,7 @@ function Spawner:hasRoomForAnotherRight()
         rightMostItemX = math.max(rightMostItemX, item.x)
     end
 
-    if rightMostItemX < love.graphics.getWidth() - 200 then
+    if rightMostItemX < love.graphics.getWidth() - 350 then
         return true
     else
         return false
