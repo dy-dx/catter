@@ -175,27 +175,40 @@ function love.draw()
     end
 end
 
-function checkIsWithin(x1, y1, w1, h1, x2, y2, w2, h2)
+function xYWidthHeight(item)
+    return item.x, item.y, item.width, item.height;
+end
+
+function checkIsWithin(item1, item2)
+    local x1, y1, w1, h1 = xYWidthHeight(item1)
+    local x2, y2, w2, h2 = xYWidthHeight(item2)
+
     return x1 >= x2 and
            y1 >= y2 and
            x1 + w1 <= x2 + w2 and
            y1 + h1 <=  y2 + h2
 end
 
-function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
+function checkCollision(item1, item2)
+    local x1, y1, w1, h1 = xYWidthHeight(item1)
+    local x2, y2, w2, h2 = xYWidthHeight(item2)
+
     return x1 < x2 + w2 and
          x2 < x1 + w1 and
          y1 < y2 + h2 and
          y2 < y1 + h1
 end
 
-function checkInSlot(x1, y1, w1, h1, x2, y2, w2, h2)
+function checkInSlot(item1, item2)
+    local x1, y1, w1, h1 = xYWidthHeight(item1)
+    local x2, y2, w2, h2 = xYWidthHeight(item2)
+
     return x1 >= x2 and
            y1 >= y2 and
            x1 + w1 <= x2 + w2 and
            y1 + h1 <= y2 + h2
-
 end
+
 function love.update(dt)
     local isOnLog = false
     local occupiedLog = nil
@@ -203,11 +216,11 @@ function love.update(dt)
 
     leonCat:handleInput(dt)
 
-    if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, hubs.x, hubs.y, hubs.width, hubs.height) then
+    if checkCollision(leonCat, hubs) then
         leonCat.isAlive = false
     end
     for i, slot in ipairs(hubs.slots) do
-        if checkInSlot(leonCat.x, leonCat.y, leonCat.width, leonCat.height, slot.x, slot.y, slot.width, slot.height) then
+        if checkInSlot(leonCat, slot) then
             if slot.isFilled then
                 leonCat.isAlive = false
                 break
@@ -221,7 +234,7 @@ function love.update(dt)
     -- todo: not this
     for i, logSpawner in ipairs(logSpawners) do
         for i, log in ipairs(logSpawner.items) do
-            if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, log.x, log.y, log.width, log.height) then
+            if checkCollision(leonCat, log) then
                 isOnLog = true
                 occupiedLog = log
                 break
@@ -234,7 +247,7 @@ function love.update(dt)
 
     for i, carSpawner in ipairs(carSpawners) do
         for i, car in ipairs(carSpawner.items) do
-            if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, car.x, car.y, car.width, car.height) then
+            if checkCollision(leonCat, car) then
                 leonCat.isAlive = false
                 break
             end
@@ -246,7 +259,7 @@ function love.update(dt)
         spawner:update(dt)
     end
 
-    local hasDrowned = not isOnLog and checkIsWithin(leonCat.x, leonCat.y, leonCat.width, leonCat.height, river.x, river.y, river.width, river.height)
+    local hasDrowned = not isOnLog and checkIsWithin(leonCat, river)
 
     if hasDrowned then
         leonCat.isAlive = false
