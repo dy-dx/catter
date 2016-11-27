@@ -130,13 +130,14 @@ function love.draw()
         end
     end
 
-    if leonCat.isAlive and not leonCat.isInSlot then
+    if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
-    elseif leonCat.isAlive and leonCat.isInSlot then
-        hubs:fillSlots()
-        leonCat:init()
     else
         drawGameOver()
+    end
+
+    if leonCat.isInSlot then
+        leonCat:init()
     end
 end
 

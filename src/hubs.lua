@@ -1,10 +1,10 @@
 local Slot = require 'slot'
 local Hubs = {}
 local SLOTWIDTH = 80
-local SLOTHEIGHT = 47
+local SLOTHEIGHT = 50
 local SLOTSPACING = 170
 local LEFTOFFSET = 15
-local TOPOFFSET = 5
+local TOPOFFSET = 2
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
 
@@ -33,12 +33,5 @@ function Hubs:drawHubs()
         slot:drawSlot()
     end
 end
-
-function Hubs:fillSlots()
-    for i, slot in ipairs(self.slots) do
-        slot:fillSlot()
-    end
-end
-
 
 return Hubs
