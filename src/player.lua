@@ -14,13 +14,14 @@ function Player:init(image)
     self.width = imageWidth
     self.height = imageHeight
     self.SOUND = SOUND
+    self.isGod = false
     self:reset()
 end
 
 function Player:reset()
     self.x = INITIAL_POSITION.x
     self.y = INITIAL_POSITION.y
-    self.isAlive = true
+    self.isAlive = true -- sould not be changed externally
     self.isInSlot = false
     self.timeSinceMoved = 0
     self.moveTimeout = 0.15
@@ -48,6 +49,12 @@ function Player:handleInput(dt)
             self.x = self.x + BLOCK_W
             self.timeSinceMoved = 0
         end
+    end
+end
+
+function Player:kill()
+    if not self.isGod then
+        self.isAlive = false
     end
 end
 
