@@ -2,7 +2,6 @@ BLOCK_W = 64
 BLOCK_H = 50
 local screenWidth = 14 * BLOCK_W
 local screenHeight = 14 * BLOCK_H
-love.window.setMode(screenWidth, screenHeight)
 
 local Player = require 'player'
 local Hubs = require 'hubs'
@@ -15,13 +14,13 @@ local Item = require 'item'
 local river = {x = 0, y = BLOCK_H, width = screenWidth, height = BLOCK_H * 5}
 local hubs = Hubs:new(0, 0, screenWidth, BLOCK_H)
 
-function logDisplay(x, y, width, height) 
+function logDisplay(x, y, width, height)
     love.graphics.setColor(139, 69, 19)
     love.graphics.rectangle('fill', x, y, width, height)
     love.graphics.setColor(255, 255, 255)
 end
 
-function carDisplay(x, y, width, height) 
+function carDisplay(x, y, width, height)
     love.graphics.setColor(0, 255, 0)
     love.graphics.rectangle('fill', x, y, width, height)
     love.graphics.setColor(255, 255, 255)
