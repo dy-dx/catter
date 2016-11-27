@@ -88,6 +88,11 @@ end
 function love.update(dt)
     local isOnLog = false
     local occupiedLog = nil
+
+    -- The order of these statements matters!
+
+    leonCat:handleInput(dt)
+
     -- todo: not this
     for i, spawner in ipairs(spawners) do
         for i, log in ipairs(spawner.items) do
@@ -96,6 +101,9 @@ function love.update(dt)
                 occupiedLog = log
                 break
             end
+        end
+        if isOnLog then
+            break
         end
     end
 

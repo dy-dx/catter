@@ -1,9 +1,8 @@
 local Player = {}
 
-local SPEED = 200
+local MOVE_DISTANCE = 100
 local INITIAL_POSITION = { x = 350, y = 520 }
 local SOUND = 'meow'
-
 
 
 function Player:new(image)
@@ -12,7 +11,9 @@ function Player:new(image)
         sound = SOUND,
         image = image,
         width = imageWidth,
-        height = imageHeight
+        height = imageHeight,
+        moveTimeout = 0.4,
+        timeSinceMoved = math.huge
     }
     self.__index = self
     newObj = setmetatable(newObj, self)
@@ -30,25 +31,36 @@ function Player:makeSound()
     print ('I AM A CAT HERE ME ' .. self.sound)
 end
 
+-- shhh is ok
+function Player:handleInput(dt)
+    self.timeSinceMoved = self.timeSinceMoved + dt
+
+    if self.timeSinceMoved >= self.moveTimeout then
+        if love.keyboard.isDown("up") then
+            self.y = self.y - MOVE_DISTANCE
+            self.timeSinceMoved = 0
+        end
+        if love.keyboard.isDown("down") then
+            self.y = self.y + MOVE_DISTANCE
+            self.timeSinceMoved = 0
+        end
+        if love.keyboard.isDown("left") then
+            self.x = self.x - MOVE_DISTANCE
+            self.timeSinceMoved = 0
+        end
+        if love.keyboard.isDown("right") then
+            self.x = self.x + MOVE_DISTANCE
+            self.timeSinceMoved = 0
+        end
+    end
+end
+
 function Player:update(dt, occupiedLog)
-    local distance = dt * SPEED
     if occupiedLog ~= nil then
         self.x = self.x + occupiedLog.speed * dt
     end
-    local dimensionWidth, dimensionHeight = love.graphics.getDimensions()
 
-    if love.keyboard.isDown("up") then
-        self.y = self.y - distance;
-    end
-    if love.keyboard.isDown("down") then
-        self.y = self.y + distance;
-    end
-    if love.keyboard.isDown("left") then
-        self.x = self.x - distance;
-    end
-    if love.keyboard.isDown("right") then
-        self.x = self.x + distance
-    end
+    local dimensionWidth, dimensionHeight = love.graphics.getDimensions()
 
     self.x = math.max(0, self.x)
     self.x = math.min(dimensionWidth - self.width, self.x)
