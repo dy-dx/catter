@@ -22,14 +22,7 @@ function Hubs:new(x, y, width, height)
     }
     self.__index = self
     newObj = setmetatable(newObj, self)
-    newObj:init()
     return newObj
-end
-
-function Hubs:init()
-    for i, slot in ipairs(self.slots) do
-        slot.isFilled = false
-    end
 end
 
 function Hubs:drawHubs()
@@ -41,6 +34,11 @@ function Hubs:drawHubs()
     end
 end
 
+function Hubs:fillSlots()
+    for i, slot in ipairs(self.slots) do
+        slot:fillSlot()
+    end
+end
 
 
 return Hubs

@@ -24,6 +24,7 @@ function Player:init()
     self.x = INITIAL_POSITION.x
     self.y = INITIAL_POSITION.y
     self.isAlive = true
+    self.isInSlot = false
 end
 
 function Player:makeSound()
