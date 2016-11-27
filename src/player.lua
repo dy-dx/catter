@@ -1,7 +1,10 @@
 local Player = {}
 
-local MOVE_DISTANCE = 64
-local INITIAL_POSITION = { x = 350, y = 520 }
+local BLOCK_SIZE = 64
+local BLOCK_W = 64
+local BLOCK_H = 50
+local yBlockOffset = (BLOCK_H - 44) / 2
+local INITIAL_POSITION = { x = BLOCK_W * 7, y = BLOCK_H * 12 + yBlockOffset }
 local SOUND = 'meow'
 
 function Player:new(image)
@@ -36,19 +39,19 @@ function Player:handleInput(dt)
 
     if self.timeSinceMoved >= self.moveTimeout then
         if love.keyboard.isDown("up") then
-            self.y = self.y - MOVE_DISTANCE
+            self.y = self.y - BLOCK_H
             self.timeSinceMoved = 0
         end
         if love.keyboard.isDown("down") then
-            self.y = self.y + MOVE_DISTANCE
+            self.y = self.y + BLOCK_H
             self.timeSinceMoved = 0
         end
         if love.keyboard.isDown("left") then
-            self.x = self.x - MOVE_DISTANCE
+            self.x = self.x - BLOCK_W
             self.timeSinceMoved = 0
         end
         if love.keyboard.isDown("right") then
-            self.x = self.x + MOVE_DISTANCE
+            self.x = self.x + BLOCK_W
             self.timeSinceMoved = 0
         end
     end

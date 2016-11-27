@@ -1,3 +1,9 @@
+BLOCK_W = 64
+BLOCK_H = 50
+local screenWidth = 14 * BLOCK_W
+local screenHeight = 14 * BLOCK_H
+love.window.setMode(screenWidth, screenHeight)
+
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
@@ -6,11 +12,8 @@ local leonCat = nil
 local Log = require 'log'
 local Car = require 'car'
 
-local screenWidth = love.graphics.getWidth()
-local screenHeight = love.graphics.getHeight()
-
 -- environment
-local river = {x = 0, y = 50, width = screenWidth, height = 250}
+local river = {x = 0, y = BLOCK_H, width = screenWidth, height = BLOCK_H * 5}
 local hubs = Hubs:new()
 
 local logSpawners = {
@@ -82,6 +85,13 @@ function love.draw()
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
     hubs:drawHubs()
+    -- safe areas
+    love.graphics.setColor(148, 0, 211)
+    love.graphics.rectangle('fill', 0, BLOCK_H * 6, screenWidth, BLOCK_H)
+    love.graphics.rectangle('fill', 0, BLOCK_H * 12, screenWidth, BLOCK_H)
+    -- highway
+    love.graphics.setColor(100, 100, 100)
+    love.graphics.rectangle('fill', 0, BLOCK_H * 7, screenWidth, BLOCK_H * 5)
     love.graphics.setColor(255, 255, 255)
 
     for i, spawner in ipairs(allSpawners) do
