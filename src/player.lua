@@ -14,6 +14,7 @@ function Player:init(image)
     self.width = imageWidth
     self.height = imageHeight
     self.SOUND = SOUND
+    self.isGod = false
     self:reset()
 end
 
@@ -24,7 +25,6 @@ function Player:reset()
     self.isInSlot = false
     self.timeSinceMoved = 0
     self.moveTimeout = 0.15
-    self.isGod = false
 end
 
 function Player:makeSound()

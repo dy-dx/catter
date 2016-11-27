@@ -100,7 +100,7 @@ end
 
 function toggleGodMode()
     leonCat.isGod = not leonCat.isGod
-    Hud:toggleGodMode()
+    hud:setGodMode(leonCat.isGod)
 end
 
 function love.keypressed(key)
@@ -125,6 +125,7 @@ function reset()
     init()
     leonCat:reset()
     hubs:reset()
+    hud:reset()
     for i, spawner in ipairs(allSpawners) do
         spawner:reset()
     end
@@ -170,7 +171,7 @@ function love.draw()
         end
     end
 
-    hud:draw(lives)
+    hud:draw()
 
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
