@@ -1,18 +1,22 @@
-BLOCK_W = 64
-BLOCK_H = 50
-
-local screenWidth = 14 * BLOCK_W
-local screenHeight = 14 * BLOCK_H
-
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
-local leonCat = nil
-
 local Item = require 'item'
+
+local BLOCK_W = 64
+local BLOCK_H = 50
+
+local screenWidth = 14 * BLOCK_W
+local screenHeight = 14 * BLOCK_H
+local PADDING = 2
+local leonCat = nil
 
 function row(num)
     return BLOCK_H * (num - 1)
+end
+
+function blockWidth(num)
+    return BLOCK_W * num
 end
 
 -- environment
@@ -21,13 +25,14 @@ local hubs = Hubs:new(0, 0, screenWidth, BLOCK_H)
 
 function logDisplay(x, y, width, height)
     love.graphics.setColor(139, 69, 19)
-    love.graphics.rectangle('fill', x, y, width, height)
+    love.graphics.rectangle('fill', x + PADDING, y, width, height - PADDING * 2)
     love.graphics.setColor(255, 255, 255)
 end
 
 function carDisplay(x, y, width, height)
+    local padding = 2
     love.graphics.setColor(0, 255, 0)
-    love.graphics.rectangle('fill', x, y, width, height)
+    love.graphics.rectangle('fill', x + PADDING, y, width, height - PADDING * 2)
     love.graphics.setColor(255, 255, 255)
 end
 
@@ -38,19 +43,19 @@ function ItemFactory(width, height, speed, displayFn)
 end
 
 local logSpawners = {
-    Spawner:new(ItemFactory(200, BLOCK_H, 400, logDisplay), row(2)),
-    Spawner:new(ItemFactory(350, BLOCK_H, 350, logDisplay), row(3), -1),
-    Spawner:new(ItemFactory(300, BLOCK_H, 275, logDisplay), row(4)),
-    Spawner:new(ItemFactory(350, BLOCK_H, 225, logDisplay), row(5), -1),
-    Spawner:new(ItemFactory(300, BLOCK_H, 325, logDisplay), row(6))
+    Spawner:new(ItemFactory(blockWidth(4), BLOCK_H, 400, logDisplay), row(2)),
+    Spawner:new(ItemFactory(blockWidth(7), BLOCK_H, -350, logDisplay), row(3), -1),
+    Spawner:new(ItemFactory(blockWidth(6), BLOCK_H, 275, logDisplay), row(4)),
+    Spawner:new(ItemFactory(blockWidth(7), BLOCK_H, -225, logDisplay), row(5), -1),
+    Spawner:new(ItemFactory(blockWidth(6), BLOCK_H, 325, logDisplay), row(6))
 }
 
 local carSpawners = {
-    Spawner:new(ItemFactory(200, BLOCK_H, 425, carDisplay), row(8), -1),
-    Spawner:new(ItemFactory(100, BLOCK_H, 500, carDisplay), row(9)),
-    Spawner:new(ItemFactory(150, BLOCK_H, 375, carDisplay), row(10), -1),
-    Spawner:new(ItemFactory(200, BLOCK_H, 250, carDisplay), row(11)),
-    Spawner:new(ItemFactory(100, BLOCK_H, 300, carDisplay), row(12), -1)
+    Spawner:new(ItemFactory(blockWidth(4), BLOCK_H, -425, carDisplay), row(8), -1),
+    Spawner:new(ItemFactory(blockWidth(2), BLOCK_H, 500, carDisplay), row(9)),
+    Spawner:new(ItemFactory(blockWidth(3), BLOCK_H, -375, carDisplay), row(10), -1),
+    Spawner:new(ItemFactory(blockWidth(4), BLOCK_H, 250, carDisplay), row(11)),
+    Spawner:new(ItemFactory(blockWidth(2), BLOCK_H, -300, carDisplay), row(12), -1)
 }
 
 function tableConcat(t1, t2)
