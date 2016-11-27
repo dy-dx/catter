@@ -12,23 +12,26 @@ function Spawner:reset()
 end
 
 function Spawner:update(dt)
-    for i, item in ipairs(self.items) do
+
+    if table.getn(self.items) > 30 then
+        error("memory leak! " .. table.getn(self.items) .. " items in spawner")
+    end
+
+    for i, item in lume.ripairs(self.items) do
         item.x = item.x + item.speed * dt
         if self.xDirection == 1 and item.x > love.graphics.getWidth() then
-            table.remove(self.items, 1)
-        end
-
-        if self.xDirection == -1 and item.x < -350 then
-            table.remove(self.items, 1)
+            table.remove(self.items, i)
+        elseif self.xDirection == -1 and item.x < -350 then
+            table.remove(self.items, i)
         end
     end
 
     if self.xDirection == 1 and self:hasRoomForAnotherLeft() then
-        table.insert(self.items, self.factory(-350, self.yPos))
+        lume.push(self.items, self.factory(-350, self.yPos))
     end
 
     if self.xDirection == -1 and self:hasRoomForAnotherRight() then
-        table.insert(self.items, self.factory(love.graphics.getWidth() + 350, self.yPos))
+        lume.push(self.items, self.factory(love.graphics.getWidth() + 350, self.yPos))
     end
 end
 
