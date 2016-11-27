@@ -1,4 +1,5 @@
 local Player = require 'player'
+local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local leonCat = nil
 
@@ -8,7 +9,9 @@ local Car = require 'car'
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
 
+-- environment
 local river = {x = 0, y = 50, width = screenWidth, height = 250}
+local hubs = Hubs:new()
 
 local logSpawners = {
     Spawner:new(Log, 80),
@@ -78,6 +81,7 @@ end
 function love.draw()
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
+    hubs:drawHubs()
     love.graphics.setColor(255, 255, 255)
 
     for i, spawner in ipairs(allSpawners) do
