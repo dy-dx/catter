@@ -14,9 +14,7 @@ function Player:new(image)
         sound = SOUND,
         image = image,
         width = imageWidth,
-        height = imageHeight,
-        moveTimeout = 0.25,
-        timeSinceMoved = math.huge
+        height = imageHeight
     }
     self.__index = self
     newObj = setmetatable(newObj, self)
@@ -28,6 +26,8 @@ function Player:init()
     self.x = INITIAL_POSITION.x
     self.y = INITIAL_POSITION.y
     self.isAlive = true
+    self.timeSinceMoved = math.huge
+    self.moveTimeout = 0.25
 end
 
 function Player:makeSound()
