@@ -1,18 +1,13 @@
-local Spawner = {}
+local Spawner = Class:new()
 
-function Spawner:new(factory, yPos, xDirection)
-    local newObj = {
-        yPos = yPos or 100,
-        xDirection = xDirection or 1,
-        factory = factory
-    }
-    self.__index = self
-    newObj = setmetatable(newObj, self)
-    newObj:init()
-    return newObj
+function Spawner:init(factory, yPos, xDirection)
+    yPos = yPos or 100
+    xDirection = xDirection or 1
+    factory = factory
+    self:reset()
 end
 
-function Spawner:init()
+function Spawner:reset()
     self.items = {}
 end
 

@@ -1,16 +1,12 @@
-local Item = {}
+local Item = Class:new()
 
-function Item:new(x, y, width, height, speed, drawFn)
-    local newObj = {
-        width = width,
-        height = height,
-        x = x or 0,
-        y = y or 75,
-        speed = speed or 200,
-        drawFn = drawFn
-    }
-    self.__index = self
-    return setmetatable(newObj, self)
+function Item:init(x, y, width, height, speed, drawFn)
+    self.x = x or 0
+    self.y = y or 75
+    self.width = width
+    self.height = height
+    self.speed = speed or 200
+    self.drawFn = drawFn
 end
 
 function Item:draw()

@@ -1,3 +1,4 @@
+require 'class'
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
@@ -113,10 +114,10 @@ end
 
 function reset()
     init()
-    leonCat:init()
-    hubs:init()
+    leonCat:reset()
+    hubs:reset()
     for i, spawner in ipairs(allSpawners) do
-        spawner:init()
+        spawner:reset()
     end
 end
 
