@@ -3,9 +3,9 @@ local Spawner = {}
 function Spawner:new(type, yPos, xDirection)
     local newObj = {
         yPos = yPos or 100,
-        xDirection = xDirection or 1
+        xDirection = xDirection or 1,
+        type = type
     }
-    self.type = type
     self.__index = self
     newObj = setmetatable(newObj, self)
     newObj:init()
