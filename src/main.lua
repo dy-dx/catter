@@ -12,14 +12,14 @@ local river = {x = 0, y = 50, width = screenWidth, height = 250}
 
 local logSpawners = {
     Spawner:new(Log, 80),
-    Spawner:new(Log, 160),
+    Spawner:new(Log, 160, -1),
     Spawner:new(Log, 240)
 }
 
 local carSpawners = {
-    Spawner:new(Car, 360),
+    Spawner:new(Car, 360, -1),
     Spawner:new(Car, 440),
-    Spawner:new(Car, 520)
+    Spawner:new(Car, 520, -1)
 }
 
 function tableConcat(t1, t2)

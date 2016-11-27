@@ -4,7 +4,6 @@ local MOVE_DISTANCE = 100
 local INITIAL_POSITION = { x = 350, y = 520 }
 local SOUND = 'meow'
 
-
 function Player:new(image)
     local imageWidth, imageHeight = image:getDimensions()
     local newObj = {
