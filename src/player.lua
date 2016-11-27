@@ -28,7 +28,7 @@ function Player:init()
     self.isAlive = true
     self.isInSlot = false
     self.timeSinceMoved = 0
-    self.moveTimeout = 0.25
+    self.moveTimeout = 0.15
 end
 
 function Player:makeSound()

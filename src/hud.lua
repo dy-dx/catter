@@ -10,7 +10,7 @@ function Hud:new()
 end
 
 function Hud:init()
-    self.livesFont = love.graphics.newFont(16)
+    self.livesFont = love.graphics.newFont(22)
 end
 
 function Hud:updateLives(lives)
@@ -22,8 +22,8 @@ function Hud:draw()
     local screenHeight = love.graphics.getHeight()
     love.graphics.draw(
         self.livesText,
-        0,
-        screenHeight - self.livesFont:getHeight(self.livesString) - 10
+        12,
+        screenHeight - self.livesFont:getHeight(self.livesString) - 12
     )
 end
 

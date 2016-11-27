@@ -6,7 +6,10 @@ local Hud = require 'hud'
 
 local hud = Hud:new()
 local leonCat = nil
-local lives = 3
+local lives = nil
+local isGameOver = nil
+local isGameLost = nil
+local isGameWon = nil
 
 local BLOCK_W = 64
 local BLOCK_H = 50
@@ -14,7 +17,6 @@ local BLOCK_H = 50
 local screenWidth = 14 * BLOCK_W
 local screenHeight = 14 * BLOCK_H
 local PADDING = 4
-local leonCat = nil
 
 function row(num)
     return BLOCK_H * (num - 1)
@@ -102,7 +104,10 @@ function love.keypressed(key)
 end
 
 function init()
-    lives = 3
+    lives = 9
+    isGameOver = false
+    isGameLost = false
+    isGameWon = false
     hud:updateLives(lives)
 end
 
@@ -157,15 +162,15 @@ function love.draw()
 
     hud:draw(lives)
 
-    if lives < 1 then
-        drawGameOver()
-    end
-
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
     end
 
-    if hubs:AllSlotsFilled() then
+    if isGameLost then
+        drawGameOver()
+    end
+
+    if isGameWon then
         drawYouWin()
     end
 end
@@ -250,11 +255,19 @@ function love.update(dt)
     if leonCat.isInSlot then
         leonCat:init()
     end
-    if not leonCat.isAlive then
+
+    if hubs:AllSlotsFilled() then
+        isGameWon = true
+    end
+
+    if not leonCat.isAlive and not isGameOver then
         lives = lives - 1
         hud:updateLives(lives)
         if lives > 0 then
             leonCat:init()
+        else
+            isGameOver = true
+            isGameLost = true
         end
     end
 end
