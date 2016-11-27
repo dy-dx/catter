@@ -19,7 +19,7 @@ function Slot:drawSlot()
     love.graphics.setColor(255, 255, 255)
     if self.isFilled then
         love.graphics.setColor(255, 0, 0)
-        love.graphics.circle('fill', self.x + 40, self.y + 5, self.width/2, self.height/2)
+        love.graphics.circle('fill', self.x + self.width/2, self.y + self.height/2, self.width/4, self.height/3)
         love.graphics.setColor(255, 255, 255)
     end
 end

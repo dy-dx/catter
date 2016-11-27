@@ -75,6 +75,10 @@ local restartFont = love.graphics.newFont(20)
 local restartString = "Press R to restart. Stop Killing my cat!!!!"
 local restartText = love.graphics.newText(restartFont, restartString)
 
+local youWinFont = love.graphics.newFont(120)
+local youWinString = "YOU WIN"
+local youWinText = love.graphics.newText(youWinFont, youWinString)
+
 function love.load()
     local image = love.graphics.newImage("cat64x44.jpg")
     leonCat = Player:new(image)
@@ -88,6 +92,7 @@ end
 
 function reset()
     leonCat:init()
+    hubs:init()
     for i, spawner in ipairs(allSpawners) do
         spawner:init()
     end
@@ -103,6 +108,14 @@ function drawGameOver()
         restartText,
         screenWidth / 2 - restartFont:getWidth(restartString) / 2 ,
         screenHeight / 2 + gameOverFont:getHeight(gameOverString) / 2 + gameOverFont:getHeight(restartString) / 2
+    )
+end
+
+function drawYouWin()
+    love.graphics.draw(
+        youWinText,
+        screenWidth / 2 - youWinFont:getWidth(youWinString) / 2,
+        screenHeight / 2 - youWinFont:getHeight(youWinString) / 2
     )
 end
 
@@ -131,8 +144,8 @@ function love.draw()
         drawGameOver()
     end
 
-    if leonCat.isInSlot then
-        leonCat:init()
+    if hubs:AllSlotsFilled() then
+        drawYouWin()
     end
 end
 
@@ -164,8 +177,15 @@ function love.update(dt)
 
     leonCat:handleInput(dt)
 
+    if checkCollision(leonCat.x, leonCat.y, leonCat.width, leonCat.height, hubs.x, hubs.y, hubs.width, hubs.height) then
+        leonCat.isAlive = false
+    end
     for i, slot in ipairs(hubs.slots) do
         if checkInSlot(leonCat.x, leonCat.y, leonCat.width, leonCat.height, slot.x, slot.y, slot.width, slot.height) then
+            if slot.isFilled then
+                leonCat.isAlive = false
+                break
+            end
             leonCat.isInSlot = true
             slot.isFilled = true
             break
@@ -204,5 +224,9 @@ function love.update(dt)
 
     if hasDrowned then
         leonCat.isAlive = false
+    end
+
+    if leonCat.isInSlot then
+        leonCat:init()
     end
 end
