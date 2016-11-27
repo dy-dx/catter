@@ -189,13 +189,6 @@ function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
          y2 < y1 + h1
 end
 
-function checkInSlot(x1, y1, w1, h1, x2, y2, w2, h2)
-    return x1 >= x2 and
-           y1 >= y2 and
-           x1 + w1 <= x2 + w2 and
-           y1 + h1 <= y2 + h2
-
-end
 function love.update(dt)
     local isOnLog = false
     local occupiedLog = nil
@@ -207,7 +200,7 @@ function love.update(dt)
         leonCat.isAlive = false
     end
     for i, slot in ipairs(hubs.slots) do
-        if checkInSlot(leonCat.x, leonCat.y, leonCat.width, leonCat.height, slot.x, slot.y, slot.width, slot.height) then
+        if checkIsWithin(leonCat.x, leonCat.y, leonCat.width, leonCat.height, slot.x, slot.y, slot.width, slot.height) then
             if slot.isFilled then
                 leonCat.isAlive = false
                 break

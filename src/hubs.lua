@@ -2,10 +2,11 @@ local Slot = require 'slot'
 local Hubs = {}
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
-local SLOTWIDTH = 90
+local SIDEOFFSET = 50
+local SLOTWIDTH = 100
+local SLOTSPACE = screenWidth - SIDEOFFSET*2 - SLOTWIDTH*5
 local SLOTHEIGHT = 50
-local SLOTSPACING = 190
-local LEFTOFFSET = 20
+local SLOTSPACING = SLOTSPACE/4
 local TOPOFFSET = 2
 
 function Hubs:new(x, y, width, height)
@@ -22,11 +23,11 @@ function Hubs:new(x, y, width, height)
 end
 
 function Hubs:init()
-    self.slots = {Slot:new(LEFTOFFSET, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(LEFTOFFSET + SLOTSPACING, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(LEFTOFFSET + SLOTSPACING*2, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(LEFTOFFSET + SLOTSPACING*3, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(LEFTOFFSET + SLOTSPACING*4, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT)}
+    self.slots = {Slot:new(SIDEOFFSET, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + SLOTSPACING + SLOTWIDTH, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + SLOTSPACING*2 + SLOTWIDTH*2, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + SLOTSPACING*3 + SLOTWIDTH*3, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + SLOTSPACING*4 + SLOTWIDTH*4, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT)}
 end
 
 function Hubs:drawHubs()
