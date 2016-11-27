@@ -13,7 +13,7 @@ local Item = require 'item'
 
 -- environment
 local river = {x = 0, y = BLOCK_H, width = screenWidth, height = BLOCK_H * 5}
-local hubs = Hubs:new()
+local hubs = Hubs:new(0, 0, screenWidth, BLOCK_H)
 
 function logDisplay(x, y, width, height) 
     love.graphics.setColor(139, 69, 19)
