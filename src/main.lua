@@ -257,7 +257,7 @@ function love.update(dt)
     end
 
     if leonCat.isInSlot then
-        leonCat:init()
+        leonCat:reset()
     end
 
     if hubs:AllSlotsFilled() then
@@ -268,7 +268,7 @@ function love.update(dt)
         lives = lives - 1
         hud:updateLives(lives)
         if lives > 0 then
-            leonCat:init()
+            leonCat:reset()
         else
             isGameOver = true
             isGameLost = true
