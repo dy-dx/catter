@@ -81,6 +81,10 @@ end
 
 local allSpawners = tableConcat(logSpawners, carSpawners)
 
+local pausedFont = love.graphics.newFont(120)
+local pausedString = "Paused"
+local pausedText = love.graphics.newText(pausedFont, pausedString)
+
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
 local gameOverText = love.graphics.newText(gameOverFont, gameOverString)
@@ -92,6 +96,8 @@ local restartText = love.graphics.newText(restartFont, restartString)
 local youWinFont = love.graphics.newFont(120)
 local youWinString = "YOU WIN"
 local youWinText = love.graphics.newText(youWinFont, youWinString)
+
+local paused = false;
 
 function love.load()
     local image = love.graphics.newImage("cat64x44.jpg")
@@ -112,6 +118,10 @@ function love.keypressed(key)
     if key == 'g' then
         toggleGodMode()
     end
+
+    if key == 'p' then
+        paused = not paused
+    end
 end
 
 function init()
@@ -123,6 +133,7 @@ function init()
 end
 
 function reset()
+    paused = false
     init()
     leonCat:reset()
     hubs:reset()
@@ -152,7 +163,17 @@ function drawYouWin()
     )
 end
 
+function drawPaused()
+    love.graphics.draw(
+        pausedText,
+        screenWidth / 2 - pausedFont:getWidth(pausedString) / 2,
+        screenHeight / 2 - pausedFont:getHeight(pausedString) / 2
+    )
+end
+
 function love.draw()
+    
+
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
     hubs:drawHubs()
@@ -184,6 +205,10 @@ function love.draw()
     if isGameWon then
         drawYouWin()
     end
+
+    if paused then
+        drawPaused()
+    end
 end
 
 function xYWidthHeight(item)
@@ -211,6 +236,8 @@ function checkCollision(item1, item2)
 end
 
 function love.update(dt)
+    if paused then return end
+
     local isOnLog = false
     local occupiedLog = nil
     -- The order of these statements matters!
