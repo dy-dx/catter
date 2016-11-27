@@ -105,7 +105,7 @@ function toggleGodMode()
 end
 
 function love.keypressed(key)
-    if key == 'r' then
+    if key == 'r' or key == 'space' then
         reset()
     end
 
