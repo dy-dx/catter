@@ -27,7 +27,7 @@ function Player:init()
     self.y = INITIAL_POSITION.y
     self.isAlive = true
     self.isInSlot = false
-    self.timeSinceMoved = math.huge
+    self.timeSinceMoved = 0
     self.moveTimeout = 0.25
 end
 

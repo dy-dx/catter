@@ -2,6 +2,11 @@ local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local Item = require 'item'
+local Hud = require 'hud'
+
+local hud = Hud:new()
+local leonCat = nil
+local lives = 3
 
 local BLOCK_W = 64
 local BLOCK_H = 50
@@ -83,6 +88,7 @@ local restartText = love.graphics.newText(restartFont, restartString)
 function love.load()
     local image = love.graphics.newImage("cat64x44.jpg")
     leonCat = Player:new(image)
+    init()
 end
 
 function love.keypressed(key)
@@ -91,7 +97,13 @@ function love.keypressed(key)
     end
 end
 
+function init()
+    lives = 3
+    hud:updateLives(lives)
+end
+
 function reset()
+    init()
     leonCat:init()
     for i, spawner in ipairs(allSpawners) do
         spawner:init()
@@ -130,10 +142,14 @@ function love.draw()
         end
     end
 
+    hud:draw(lives)
+
+    if lives < 1 then
+        drawGameOver()
+    end
+
     if leonCat.isAlive then
         love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
-    else
-        drawGameOver()
     end
 
     if leonCat.isInSlot then
@@ -209,5 +225,13 @@ function love.update(dt)
 
     if hasDrowned then
         leonCat.isAlive = false
+    end
+
+    if not leonCat.isAlive then
+        lives = lives - 1
+        hud:updateLives(lives)
+        if lives > 0 then
+            leonCat:init()
+        end
     end
 end
