@@ -8,6 +8,8 @@ local MAX_Y = BLOCK_H * 12 + yBlockOffset
 local INITIAL_POSITION = { x = BLOCK_W * 7, y = MAX_Y }
 local SOUND = 'meow'
 
+local MOVE_TIMEOUT = 0.15
+
 function Player:init(image)
     local imageWidth, imageHeight = image:getDimensions()
     self.image = image
@@ -24,18 +26,12 @@ function Player:reset()
     self.isAlive = true -- sould not be changed externally
     self.isInSlot = false
     self.isGod = false
-    self._canMove = true
+    self._isMoving = false
     self.moveTimer:clear()
 end
 
 function Player:canMove()
-    return self._canMove
-end
-
-function Player:setMoveTimer()
-    self.moveTimer:clear()
-    self._canMove = false
-    self.moveTimer:after(0.15, function() self._canMove = true end)
+    return not self._isMoving
 end
 
 function Player:makeSound()
@@ -47,9 +43,15 @@ function Player:move(xDir, yDir)
         return false
     end
 
-    self:setMoveTimer()
-    self.x = self.x + xDir*BLOCK_W
-    self.y = self.y + yDir*BLOCK_H
+    self._isMoving = true
+    self.moveTimer:clear()
+    self.moveTimer:tween(
+        MOVE_TIMEOUT,
+        self,
+        { x = self.x + xDir*BLOCK_W, y = self.y + yDir*BLOCK_H },
+        'in-out-quad',
+        function() self._isMoving = false end
+    )
 end
 
 -- shhh is ok
@@ -74,7 +76,7 @@ function Player:kill()
 end
 
 function Player:update(dt, occupiedLog)
-    if occupiedLog ~= nil then
+    if self:canMove() and occupiedLog ~= nil then
         self.x = self.x + occupiedLog.speed * dt
     end
 
