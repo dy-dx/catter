@@ -52,6 +52,7 @@ function Player:move(xDir, yDir)
         'in-out-quad',
         function() self._isMoving = false end
     )
+    Signal.emit('meow')
 end
 
 -- shhh is ok
@@ -72,6 +73,7 @@ end
 function Player:kill()
     if not self.isGod then
         self.isAlive = false
+        Signal.emit('hit')
     end
 end
 

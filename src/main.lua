@@ -8,6 +8,7 @@ local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local Item = require 'item'
 local Hud = require 'hud'
+local Sound = require 'sound'
 
 local hud = Hud:new()
 local leonCat = nil
@@ -260,6 +261,7 @@ function love.update(dt)
             end
             leonCat.isInSlot = true
             slot.isFilled = true
+            Signal.emit('roar')
             break
         end
     end
