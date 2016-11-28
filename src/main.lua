@@ -12,7 +12,6 @@ local Sound = require 'sound'
 
 local hud = Hud:new()
 local leonCat = nil
-local lives = nil
 local isGameOver = nil
 local isGameLost = nil
 local isGameWon = nil
@@ -129,11 +128,11 @@ function love.keypressed(key)
 end
 
 function init()
-    lives = 9
+    leonCat.lives = 9
     isGameOver = false
     isGameLost = false
     isGameWon = false
-    hud:updateLives(lives)
+    hud:updateLives(leonCat.lives)
 end
 
 function reset()
@@ -194,11 +193,8 @@ function love.draw()
         end
     end
 
-    hud:draw(lives)
-
-    if leonCat.isAlive then
-        love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
-    end
+    love.graphics.draw(leonCat.image, leonCat.x, leonCat.y, leonCat.rotation, leonCat.scale, leonCat.scale)
+    hud:draw(leonCat.lives)
 
     if isGameLost then
         drawGameOver()
@@ -245,7 +241,6 @@ function love.update(dt)
     -- The order of these statements matters!
 
     Timer.update(dt)
-    leonCat:handleInput(dt)
 
     for i, slot in ipairs(hubs.slots) do
         if checkIsWithin(leonCat, slot) then
@@ -306,11 +301,8 @@ function love.update(dt)
     end
 
     if not leonCat.isAlive and not isGameOver then
-        lives = lives - 1
-        hud:updateLives(lives)
-        if lives > 0 then
-            leonCat:reset()
-        else
+        hud:updateLives(leonCat.lives)
+        if leonCat.lives <= 0 then
             isGameOver = true
             isGameLost = true
         end

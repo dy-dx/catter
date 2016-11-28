@@ -17,7 +17,9 @@ function Player:init(image)
     self.height = imageHeight
     self.SOUND = SOUND
     self.moveTimer = Timer.new()
+    self.deathTimer = Timer.new()
     self.isGod = false
+    self.lives = nil
     self:reset()
 end
 
@@ -25,9 +27,12 @@ function Player:reset()
     self.x = INITIAL_POSITION.x
     self.y = INITIAL_POSITION.y
     self.isAlive = true -- sould not be changed externally
+    self.scale = 1
+    self.rotation = 0
     self.isInSlot = false
     self._isMoving = false
     self.moveTimer:clear()
+    self.deathTimer:clear()
 end
 
 function Player:canMove()
@@ -39,7 +44,7 @@ function Player:makeSound()
 end
 
 function Player:move(xDir, yDir)
-    if not self:canMove() then
+    if not self.isAlive or not self:canMove() then
         return false
     end
 
@@ -55,9 +60,24 @@ function Player:move(xDir, yDir)
     Signal.emit('meow')
 end
 
--- shhh is ok
-function Player:handleInput(dt)
+function Player:kill()
+    if self.isGod then return end
+    if not self.isAlive then return end
+    Signal.emit('hit')
+    self.isAlive = false
+    self.lives = self.lives - 1
+    self.deathTimer:tween(
+        0.5,
+        self,
+        { scale = 0, rotation = math.pi*2 },
+        'linear',
+        function() self:reset() end
+    )
+end
+
+function Player:update(dt, occupiedLog)
     self.moveTimer:update(dt)
+    self.deathTimer:update(dt)
 
     if love.keyboard.isDown("up") then
         self:move(0, -1)
@@ -68,16 +88,7 @@ function Player:handleInput(dt)
     elseif love.keyboard.isDown("right") then
         self:move(1, 0)
     end
-end
 
-function Player:kill()
-    if not self.isGod then
-        self.isAlive = false
-        Signal.emit('hit')
-    end
-end
-
-function Player:update(dt, occupiedLog)
     if self:canMove() and occupiedLog ~= nil then
         self.x = self.x + occupiedLog.speed * dt
     end
