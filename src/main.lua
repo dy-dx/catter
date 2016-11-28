@@ -1,13 +1,17 @@
 require 'class'
+lume = require '../vendor/lume'
+Timer = require '../vendor/hump.timer'
+Signal = require '../vendor/hump.signal'
+
 local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local Item = require 'item'
 local Hud = require 'hud'
+local Sound = require 'sound'
 
 local hud = Hud:new()
 local leonCat = nil
-local lives = nil
 local isGameOver = nil
 local isGameLost = nil
 local isGameWon = nil
@@ -102,6 +106,10 @@ end
 
 local allSpawners = tableConcat(logSpawners, carSpawners)
 
+local pausedFont = love.graphics.newFont(120)
+local pausedString = "Paused"
+local pausedText = love.graphics.newText(pausedFont, pausedString)
+
 local gameOverFont = love.graphics.newFont(120)
 local gameOverString = "Game Over"
 local gameOverText = love.graphics.newText(gameOverFont, gameOverString)
@@ -114,27 +122,43 @@ local youWinFont = love.graphics.newFont(120)
 local youWinString = "YOU WIN"
 local youWinText = love.graphics.newText(youWinFont, youWinString)
 
+local paused = false
+
 function love.load()
     local image = love.graphics.newImage("cat64x44.jpg")
     leonCat = Player:new(image)
     init()
 end
 
+function toggleGodMode()
+    leonCat.isGod = not leonCat.isGod
+    hud:setGodMode(leonCat.isGod)
+end
+
 function love.keypressed(key)
-    if key == 'r' then
+    if key == 'r' or key == 'space' then
         reset()
+    end
+
+    if key == 'g' then
+        toggleGodMode()
+    end
+
+    if key == 'p' then
+        paused = not paused
     end
 end
 
 function init()
-    lives = 9
+    leonCat.lives = 9
     isGameOver = false
     isGameLost = false
     isGameWon = false
-    hud:updateLives(lives)
+    hud:updateLives(leonCat.lives)
 end
 
 function reset()
+    paused = false
     init()
     leonCat:reset()
     hubs:reset()
@@ -168,6 +192,14 @@ function drawYouWin()
     )
 end
 
+function drawPaused()
+    love.graphics.draw(
+        pausedText,
+        screenWidth / 2 - pausedFont:getWidth(pausedString) / 2,
+        screenHeight / 2 - pausedFont:getHeight(pausedString) / 2
+    )
+end
+
 function love.draw()
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
@@ -193,11 +225,8 @@ function love.draw()
         end
     end
 
-    hud:draw(lives)
-
-    if leonCat.isAlive then
-        love.graphics.draw(leonCat.image, leonCat.x, leonCat.y)
-    end
+    love.graphics.draw(leonCat.image, leonCat.x, leonCat.y, leonCat.rotation, leonCat.scale, leonCat.scale)
+    hud:draw(leonCat.lives)
 
     if isGameLost then
         drawGameOver()
@@ -206,10 +235,14 @@ function love.draw()
     if isGameWon then
         drawYouWin()
     end
+
+    if paused then
+        drawPaused()
+    end
 end
 
 function xYWidthHeight(item)
-    return item.x, item.y, item.width, item.height;
+    return item.x, item.y, item.width, item.height
 end
 
 function checkIsWithin(item1, item2)
@@ -233,25 +266,28 @@ function checkCollision(item1, item2)
 end
 
 function love.update(dt)
+    if paused then return end
+
     local isOnLog = false
     local occupiedLog = nil
     -- The order of these statements matters!
 
-    leonCat:handleInput(dt)
+    Timer.update(dt)
 
-    if checkCollision(leonCat, hubs) then
-        leonCat.isAlive = false
-    end
     for i, slot in ipairs(hubs.slots) do
         if checkIsWithin(leonCat, slot) then
             if slot.isFilled then
-                leonCat.isAlive = false
-                break
+                leonCat:kill()
+            else
+                leonCat.isInSlot = true
+                slot.isFilled = true
+                Signal.emit('roar')
             end
-            leonCat.isInSlot = true
-            slot.isFilled = true
-            break
         end
+    end
+
+    if not leonCat.isInSlot and checkIsWithin(leonCat, hubs) then
+        leonCat:kill()
     end
 
     -- todo: not this
@@ -284,7 +320,7 @@ function love.update(dt)
     for i, carSpawner in ipairs(carSpawners) do
         for i, car in ipairs(carSpawner.items) do
             if checkCollision(leonCat, car) then
-                leonCat.isAlive = false
+                leonCat:kill()
                 break
             end
         end
@@ -301,7 +337,7 @@ function love.update(dt)
     local hasDrowned = not isOnLog and checkIsWithin(leonCat, river)
 
     if hasDrowned then
-        leonCat.isAlive = false
+        leonCat:kill()
     end
 
     if leonCat.isInSlot then
@@ -313,11 +349,8 @@ function love.update(dt)
     end
 
     if not leonCat.isAlive and not isGameOver then
-        lives = lives - 1
-        hud:updateLives(lives)
-        if lives > 0 then
-            leonCat:reset()
-        else
+        hud:updateLives(leonCat.lives)
+        if leonCat.lives <= 0 then
             isGameOver = true
             isGameLost = true
         end
