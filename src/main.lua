@@ -44,17 +44,39 @@ function carDisplay(x, y, width, height)
     love.graphics.setColor(255, 255, 255)
 end
 
+function twoTurtleDisplay(x, y, width, height)
+    parts = width/5
+    love.graphics.setColor(0, 255, 0)
+    love.graphics.ellipse('fill', x, y + 25, parts*2, height/3)
+    love.graphics.ellipse('fill', x + parts*4, y + 25, parts*2, height/3)
+    love.graphics.setColor(255, 255, 255)
+end
+
+function threeTurtleDisplay(x, y, width, height)
+    parts = width/10
+    love.graphics.setColor(0, 255, 0)
+    love.graphics.ellipse('fill', x, y + 25, parts*2, height/3)
+    love.graphics.ellipse('fill', x + parts*4, y + 25, parts*2, height/3)
+    love.graphics.ellipse('fill', x + parts*8, y + 25, parts*2, height/3)
+    love.graphics.setColor(255, 255, 255)
+end
+
 function ItemFactory(width, height, speed, displayFn)
     return function(x, y)
         return Item:new(x, y, width, height, speed, displayFn)
     end
 end
 
+local turtleSpawners = {
+    Spawner:new(ItemFactory(blockWidth(1), BLOCK_H, 350, twoTurtleDisplay), row(2)),
+    Spawner:new(ItemFactory(blockWidth(2), BLOCK_H, -250, threeTurtleDisplay), row(5), -1)
+}
+
 local logSpawners = {
-    Spawner:new(ItemFactory(blockWidth(4), BLOCK_H, 400, logDisplay), row(2)),
+    --Spawner:new(ItemFactory(blockWidth(4), BLOCK_H, 400, logDisplay), row(2)),
     Spawner:new(ItemFactory(blockWidth(7), BLOCK_H, -350, logDisplay), row(3), -1),
     Spawner:new(ItemFactory(blockWidth(6), BLOCK_H, 275, logDisplay), row(4)),
-    Spawner:new(ItemFactory(blockWidth(7), BLOCK_H, -225, logDisplay), row(5), -1),
+   -- Spawner:new(ItemFactory(blockWidth(7), BLOCK_H, -225, logDisplay), row(5), -1),
     Spawner:new(ItemFactory(blockWidth(6), BLOCK_H, 325, logDisplay), row(6))
 }
 
@@ -119,6 +141,10 @@ function reset()
     for i, spawner in ipairs(allSpawners) do
         spawner:reset()
     end
+    for i, spawner in ipairs(turtleSpawners) do
+        spawner:reset()
+    end
+
 end
 
 function drawGameOver()
@@ -158,6 +184,12 @@ function love.draw()
     for i, spawner in ipairs(allSpawners) do
         for i, item in ipairs(spawner.items) do
             item:draw()
+        end
+    end
+
+    for i, turtleSpawner in ipairs(turtleSpawners) do
+        for i, turtle in ipairs(turtleSpawner.items) do
+            turtle:draw()
         end
     end
 
@@ -236,6 +268,19 @@ function love.update(dt)
         end
     end
 
+    for i, turtleSpawner in ipairs(turtleSpawners) do
+        for i, turtle in ipairs(turtleSpawner.items) do
+            if checkCollision(leonCat, turtle) then
+                isOnLog = true
+                occupiedLog = turtle
+                break
+            end
+        end
+        if isOnLog then
+            break
+        end
+    end
+
     for i, carSpawner in ipairs(carSpawners) do
         for i, car in ipairs(carSpawner.items) do
             if checkCollision(leonCat, car) then
@@ -247,6 +292,9 @@ function love.update(dt)
 
     leonCat:update(dt, occupiedLog)
     for i, spawner in ipairs(allSpawners) do
+        spawner:update(dt)
+    end
+    for i, spawner in ipairs(turtleSpawners) do
         spawner:update(dt)
     end
 
