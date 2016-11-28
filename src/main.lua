@@ -100,7 +100,7 @@ local youWinFont = love.graphics.newFont(120)
 local youWinString = "YOU WIN"
 local youWinText = love.graphics.newText(youWinFont, youWinString)
 
-local paused = false;
+local paused = false
 
 function love.load()
     local image = love.graphics.newImage("cat64x44.jpg")
@@ -110,7 +110,7 @@ end
 
 function toggleGodMode()
     leonCat.isGod = not leonCat.isGod
-    Hud:toggleGodMode()
+    hud:setGodMode(leonCat.isGod)
 end
 
 function love.keypressed(key)
@@ -175,7 +175,7 @@ function drawPaused()
 end
 
 function love.draw()
-    
+
 
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
@@ -215,7 +215,7 @@ function love.draw()
 end
 
 function xYWidthHeight(item)
-    return item.x, item.y, item.width, item.height;
+    return item.x, item.y, item.width, item.height
 end
 
 function checkIsWithin(item1, item2)
