@@ -248,20 +248,20 @@ function love.update(dt)
     Timer.update(dt)
     leonCat:handleInput(dt)
 
-    if checkCollision(leonCat, hubs) then
-        leonCat:kill()
-    end
-
     for i, slot in ipairs(hubs.slots) do
         if checkIsWithin(leonCat, slot) then
             if slot.isFilled then
                 leonCat:kill()
-                break
+            else
+                leonCat.isInSlot = true
+                slot.isFilled = true
             end
-            leonCat.isInSlot = true
-            slot.isFilled = true
             break
         end
+    end
+
+    if not leonCat.isInSlot and checkIsWithin(leonCat, hubs) then
+        leonCat:kill()
     end
 
     -- todo: not this
