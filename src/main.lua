@@ -7,6 +7,7 @@ local Player = require 'player'
 local Hubs = require 'hubs'
 local Spawner = require 'spawner'
 local Item = require 'item'
+local Turtle = require 'turtle'
 local Hud = require 'hud'
 local Sound = require 'sound'
 
@@ -49,7 +50,7 @@ function carDisplay(x, y, width, height)
 end
 
 function twoTurtleDisplay(x, y, width, height)
-    parts = width/5
+    local parts = width/5
     love.graphics.setColor(0, 255, 0)
     love.graphics.ellipse('fill', x, y + 25, parts*2, height/3)
     love.graphics.ellipse('fill', x + parts*4, y + 25, parts*2, height/3)
@@ -57,7 +58,7 @@ function twoTurtleDisplay(x, y, width, height)
 end
 
 function threeTurtleDisplay(x, y, width, height)
-    parts = width/10
+    local parts = width/10
     love.graphics.setColor(0, 255, 0)
     love.graphics.ellipse('fill', x, y + 25, parts*2, height/3)
     love.graphics.ellipse('fill', x + parts*4, y + 25, parts*2, height/3)
@@ -71,9 +72,15 @@ function ItemFactory(width, height, speed, displayFn)
     end
 end
 
+function TurtleFactory(width, height, speed, displayFn)
+    return function(x, y)
+        return Turtle:new(x, y, width, height, speed, displayFn)
+    end
+end
+
 local turtleSpawners = {
-    Spawner:new(ItemFactory(blockWidth(1), BLOCK_H, 350, twoTurtleDisplay), row(2)),
-    Spawner:new(ItemFactory(blockWidth(2), BLOCK_H, -250, threeTurtleDisplay), row(5), -1)
+    Spawner:new(TurtleFactory(blockWidth(1), BLOCK_H, 350, twoTurtleDisplay), row(2)),
+    Spawner:new(TurtleFactory(blockWidth(2), BLOCK_H, -250, threeTurtleDisplay), row(5), -1)
 }
 
 local logSpawners = {
@@ -105,6 +112,7 @@ function tableConcat(t1, t2)
 end
 
 local allSpawners = tableConcat(logSpawners, carSpawners)
+allSpawners = tableConcat(allSpawners, turtleSpawners)
 
 local pausedFont = love.graphics.newFont(120)
 local pausedString = "Paused"
@@ -165,10 +173,6 @@ function reset()
     for i, spawner in ipairs(allSpawners) do
         spawner:reset()
     end
-    for i, spawner in ipairs(turtleSpawners) do
-        spawner:reset()
-    end
-
 end
 
 function drawGameOver()
@@ -216,12 +220,6 @@ function love.draw()
     for i, spawner in ipairs(allSpawners) do
         for i, item in ipairs(spawner.items) do
             item:draw()
-        end
-    end
-
-    for i, turtleSpawner in ipairs(turtleSpawners) do
-        for i, turtle in ipairs(turtleSpawner.items) do
-            turtle:draw()
         end
     end
 
@@ -306,7 +304,7 @@ function love.update(dt)
 
     for i, turtleSpawner in ipairs(turtleSpawners) do
         for i, turtle in ipairs(turtleSpawner.items) do
-            if checkCollision(leonCat, turtle) then
+            if not turtle.isSubmerged and checkCollision(leonCat, turtle) then
                 isOnLog = true
                 occupiedLog = turtle
                 break
@@ -328,9 +326,11 @@ function love.update(dt)
 
     leonCat:update(dt, occupiedLog)
     for i, spawner in ipairs(allSpawners) do
-        spawner:update(dt)
+        for j, item in ipairs(spawner.items) do
+            item:update(dt)
+        end
     end
-    for i, spawner in ipairs(turtleSpawners) do
+    for i, spawner in ipairs(allSpawners) do
         spawner:update(dt)
     end
 

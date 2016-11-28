@@ -13,4 +13,8 @@ function Item:draw()
     self.drawFn(self.x, self.y, self.width, self.height)
 end
 
+function Item:update(dt)
+    self.x = self.x + self.speed * dt
+end
+
 return Item

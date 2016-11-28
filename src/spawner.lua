@@ -18,7 +18,7 @@ function Spawner:update(dt)
     end
 
     for i, item in lume.ripairs(self.items) do
-        item.x = item.x + item.speed * dt
+        -- item.x = item.x + item.speed * dt
         if self.xDirection == 1 and item.x > love.graphics.getWidth() then
             table.remove(self.items, i)
         elseif self.xDirection == -1 and item.x < -350 then
