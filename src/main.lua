@@ -101,7 +101,7 @@ local youWinFont = love.graphics.newFont(120)
 local youWinString = "YOU WIN"
 local youWinText = love.graphics.newText(youWinFont, youWinString)
 
-local paused = false;
+local paused = false
 
 function love.load()
     local image = love.graphics.newImage("cat64x44.jpg")
@@ -111,7 +111,7 @@ end
 
 function toggleGodMode()
     leonCat.isGod = not leonCat.isGod
-    Hud:toggleGodMode()
+    hud:setGodMode(leonCat.isGod)
 end
 
 function love.keypressed(key)
@@ -176,8 +176,6 @@ function drawPaused()
 end
 
 function love.draw()
-    
-
     love.graphics.setColor(0, 0, 255)
     love.graphics.rectangle('fill', river.x, river.y, river.width, river.height)
     hubs:drawHubs()
@@ -216,7 +214,7 @@ function love.draw()
 end
 
 function xYWidthHeight(item)
-    return item.x, item.y, item.width, item.height;
+    return item.x, item.y, item.width, item.height
 end
 
 function checkIsWithin(item1, item2)
@@ -249,21 +247,20 @@ function love.update(dt)
     Timer.update(dt)
     leonCat:handleInput(dt)
 
-    if checkCollision(leonCat, hubs) then
-        leonCat:kill()
-    end
-
     for i, slot in ipairs(hubs.slots) do
         if checkIsWithin(leonCat, slot) then
             if slot.isFilled then
                 leonCat:kill()
-                break
+            else
+                leonCat.isInSlot = true
+                slot.isFilled = true
+                Signal.emit('roar')
             end
-            leonCat.isInSlot = true
-            slot.isFilled = true
-            Signal.emit('roar')
-            break
         end
+    end
+
+    if not leonCat.isInSlot and checkIsWithin(leonCat, hubs) then
+        leonCat:kill()
     end
 
     -- todo: not this

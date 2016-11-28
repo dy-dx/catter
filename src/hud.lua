@@ -5,11 +5,11 @@ function Hud:init()
     self.godFont = love.graphics.newFont(22)
     self.godString = 'GOD MODE'
     self.godText = love.graphics.newText(self.godFont, self.godString)
-    self.isGodMode = false;
     self:reset()
 end
 
 function Hud:reset()
+    self.isGodMode = false
 end
 
 function Hud:updateLives(lives)
@@ -17,8 +17,8 @@ function Hud:updateLives(lives)
     self.livesText = love.graphics.newText(self.livesFont, self.livesString)
 end
 
-function Hud:toggleGodMode()
-    self.godMode = not self.godMode
+function Hud:setGodMode(isGodMode)
+    self.isGodMode = isGodMode
 end
 
 function Hud:draw()
@@ -29,7 +29,7 @@ function Hud:draw()
         12,
         screenHeight - self.livesFont:getHeight(self.livesString) - 12
     )
-    if self.godMode then
+    if self.isGodMode then
         love.graphics.draw(
             self.godText,
             screenWidth - self.godFont:getWidth(self.godString) - 12,

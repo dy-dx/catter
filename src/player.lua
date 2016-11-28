@@ -17,6 +17,7 @@ function Player:init(image)
     self.height = imageHeight
     self.SOUND = SOUND
     self.moveTimer = Timer.new()
+    self.isGod = false
     self:reset()
 end
 
@@ -25,7 +26,6 @@ function Player:reset()
     self.y = INITIAL_POSITION.y
     self.isAlive = true -- sould not be changed externally
     self.isInSlot = false
-    self.isGod = false
     self._isMoving = false
     self.moveTimer:clear()
 end
