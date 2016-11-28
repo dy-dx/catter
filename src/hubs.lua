@@ -9,6 +9,10 @@ local SLOTHEIGHT = 50
 local SLOTSPACING = SLOTSPACE/4
 local TOPOFFSET = 2
 
+function slotSpace(num)
+    return SLOTSPACING*num + SLOTWIDTH*num
+end
+
 function Hubs:init(x, y, width, height)
     self.x = x or 0
     self.y = y or 0
@@ -19,10 +23,10 @@ end
 
 function Hubs:reset()
     self.slots = {Slot:new(SIDEOFFSET, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(SIDEOFFSET + SLOTSPACING + SLOTWIDTH, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(SIDEOFFSET + SLOTSPACING*2 + SLOTWIDTH*2, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(SIDEOFFSET + SLOTSPACING*3 + SLOTWIDTH*3, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
-             Slot:new(SIDEOFFSET + SLOTSPACING*4 + SLOTWIDTH*4, TOPOFFSET, SLOTWIDTH, SLOTHEIGHT)}
+             Slot:new(SIDEOFFSET + slotSpace(1), TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + slotSpace(2), TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + slotSpace(3), TOPOFFSET, SLOTWIDTH, SLOTHEIGHT),
+             Slot:new(SIDEOFFSET + slotSpace(4), TOPOFFSET, SLOTWIDTH, SLOTHEIGHT)}
 end
 
 function Hubs:drawHubs()
